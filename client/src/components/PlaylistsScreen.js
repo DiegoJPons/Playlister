@@ -7,6 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -43,18 +44,6 @@ const PlaylistsScreen = () => {
   }
   return (
     <div id="playlist-selector">
-      <div id="list-selector-heading">
-        <Fab
-          sx={{ transform: "translate(-20%, 0%)" }}
-          color="primary"
-          aria-label="add"
-          id="add-list-button"
-          onClick={handleCreateNewList}
-        >
-          <AddIcon />
-        </Fab>
-        Your Playlists
-      </div>
       <Box sx={{ bgcolor: "background.paper" }} id="list-selector-list">
         {listCard}
         <MUIDeleteModal />

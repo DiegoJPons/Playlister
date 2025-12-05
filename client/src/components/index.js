@@ -8,11 +8,12 @@ import MUIDeleteModal from "./MUIDeleteModal";
 import MUIEditSongModal from "./MUIEditSongModal";
 import MUIErrorModal from "./MUIErrorModal";
 //import MUIRemoveSongModal from './MUIRemoveSongModal'
-import RegisterScreen from "./RegisterScreen";
+import CreateAccountScreen from "./CreateAccountScreen";
 import SongCard from "./SongCard";
 import WelcomeScreen from "./WelcomeScreen";
 import Statusbar from "./Statusbar";
 import WorkspaceScreen from "./WorkspaceScreen";
+import EditAccountScreen from "./EditAccountScreen";
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -31,8 +32,9 @@ export {
   MUIErrorModal,
   //MUIRemoveSongModal,
   SongCard,
-  RegisterScreen,
+  CreateAccountScreen,
   WelcomeScreen,
   Statusbar,
   WorkspaceScreen,
+  EditAccountScreen,
 };

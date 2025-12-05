@@ -14,12 +14,15 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import HomeIcon from "@mui/icons-material/Home";
+import { Button } from "@mui/material";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 export default function AppBanner() {
   const { auth } = useContext(AuthContext);
   const { store } = useContext(GlobalStoreContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
+  const location = useLocation();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -55,11 +58,45 @@ export default function AppBanner() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
-        <Link to="/login/">Login</Link>
+      <MenuItem
+        onClick={handleMenuClose}
+        sx={{
+          "&:hover": {
+            bgcolor: "rgb(216, 240, 247)",
+          },
+        }}
+      >
+        <Link
+          to="/login/"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            display: "block",
+            width: "100%",
+          }}
+        >
+          Login
+        </Link>
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <Link to="/register/">Create New Account</Link>
+      <MenuItem
+        onClick={handleMenuClose}
+        sx={{
+          "&:hover": {
+            bgcolor: "rgb(216, 240, 247)",
+          },
+        }}
+      >
+        <Link
+          to="/register/"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            display: "block",
+            width: "100%",
+          }}
+        >
+          Create New Account
+        </Link>
       </MenuItem>
     </Menu>
   );
@@ -67,7 +104,7 @@ export default function AppBanner() {
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: "top",
+        vertical: "bottom",
         horizontal: "right",
       }}
       id={menuId}
@@ -79,23 +116,104 @@ export default function AppBanner() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      <MenuItem
+        onClick={handleLogout}
+        sx={{
+          "&:hover": {
+            bgcolor: "rgb(216, 240, 247)",
+          },
+        }}
+      >
+        Logout
+      </MenuItem>
+      <MenuItem
+        onClick={handleMenuClose}
+        sx={{
+          "&:hover": {
+            bgcolor: "rgb(216, 240, 247)",
+          },
+        }}
+      >
+        <Link
+          to="/edit-account/"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            display: "block",
+            width: "100%",
+          }}
+        >
+          Edit Account
+        </Link>
+      </MenuItem>
     </Menu>
   );
 
   let editToolbar = "";
+  let centerContent = "";
   let menu = loggedOutMenu;
   if (auth.loggedIn) {
     menu = loggedInMenu;
     if (store.currentList) {
       editToolbar = <EditToolbar />;
+    } else if (location.pathname === "/") {
+      centerContent = (
+        <Box
+          sx={{ display: "flex", alignItems: "center", height: "100%", mx: 2 }}
+        >
+          <Button
+            component={Link}
+            to="/"
+            variant="contained"
+            sx={{
+              p: 1,
+              px: 2,
+              mr: 2,
+              bgcolor: "black",
+              fontWeight: "bold",
+              borderRadius: 2,
+              textTransform: "none",
+            }}
+          >
+            Playlists
+          </Button>
+          <Button
+            component={Link}
+            to="/"
+            variant="contained"
+            sx={{
+              p: 1,
+              px: 2,
+              bgcolor: "#3A64C4",
+              fontWeight: "bold",
+              borderRadius: 2,
+              textTransform: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Song Catalog
+          </Button>
+          <Typography
+            variant="h3"
+            component="div"
+            ml={-25}
+            sx={{
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            The Playlister
+          </Typography>
+        </Box>
+      );
     }
   }
 
   function getAccountMenu(loggedIn) {
     let userInitials = auth.getUserInitials();
     console.log("userInitials: " + userInitials);
-    if (loggedIn) return <div>{userInitials}</div>;
+    if (loggedIn)
+      return <AccountCircle sx={{ fontSize: 68, color: "white" }} />;
     else return <AccountCircle sx={{ fontSize: 68, color: "white" }} />;
   }
 
@@ -107,7 +225,7 @@ export default function AppBanner() {
             variant="h4"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ height: "90px", display: { xs: "none", sm: "block" } }}
           >
             <Link
               to="/"
@@ -116,6 +234,7 @@ export default function AppBanner() {
             >
               <IconButton
                 sx={{
+                  mt: 2,
                   backgroundColor: "white",
                   width: 60,
                   height: 60,
@@ -134,14 +253,22 @@ export default function AppBanner() {
               </IconButton>
             </Link>
           </Typography>
-          <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
-          <Box sx={{ height: "90px", display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1 }}>
+            {editToolbar}
+            {centerContent}
+          </Box>
+          <Box
+            sx={{
+              alignItems: "center",
+              display: { xs: "none", md: "flex", padding: 0 },
+            }}
+          >
             <IconButton
-              size="large"
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
+              sx={{ padding: 0 }}
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
