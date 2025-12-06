@@ -49,6 +49,11 @@ function PlaylistCard(props) {
       toggleEdit();
     }
   }
+
+  function handlePlayPlaylist(event, id) {
+    event.stopPropagation();
+    store.markListForPlay(id);
+  }
   function handleUpdateText(event) {
     setText(event.target.value);
   }
@@ -59,7 +64,9 @@ function PlaylistCard(props) {
         width: "90%",
         p: "10px 20px 20px 0px",
         borderTop: "1px solid #eee",
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        "&: hover": {
+          bgcolor: "#e9e9e9ff",
+        },
       }}
     >
       {store.currentList?.songs?.length > 0 ? (
@@ -95,7 +102,12 @@ function PlaylistCard(props) {
         display: "flex",
         flexDirection: "column",
         p: 0,
+        "&:hover": {
+          bgcolor: "#e9e9e9ff",
+          cursor: "pointer",
+        },
       }}
+      onClick={handleToggleExpand}
       style={{ transform: "translate(1%,0%)", width: "98%" }}
     >
       <Box
@@ -132,10 +144,12 @@ function PlaylistCard(props) {
               handleDeleteList(event, idNamePair._id);
             }}
             sx={{
-              padding: 2,
+              padding: 3,
+              textTransform: "none",
               bgcolor: "#D32F2F",
               color: "white",
               borderRadius: 3,
+              "&:hover": { bgcolor: "#9e1515ff" },
             }}
           >
             Delete
@@ -147,10 +161,12 @@ function PlaylistCard(props) {
             }}
             aria-label="edit"
             sx={{
-              padding: 2,
+              padding: 3,
+              textTransform: "none",
               bgcolor: "#3A64C4",
               color: "white",
               borderRadius: 3,
+              "&:hover": { bgcolor: "#1e3d8fff" },
             }}
           >
             Edit
@@ -162,10 +178,12 @@ function PlaylistCard(props) {
             }}
             aria-label="copy"
             sx={{
-              padding: 2,
+              padding: 3,
+              textTransform: "none",
               bgcolor: "#077836",
               color: "white",
               borderRadius: 3,
+              "&:hover": { bgcolor: "#064c23ff" },
             }}
           >
             Copy
@@ -173,15 +191,17 @@ function PlaylistCard(props) {
           <Button
             onClick={(event) => {
               event.stopPropagation();
-              handleToggleEdit(event);
+              handlePlayPlaylist(event, idNamePair._id);
             }}
             aria-label="play"
             sx={{
-              padding: 2,
+              padding: 3,
+              textTransform: "none",
               bgcolor: "#DE24BC",
               color: "white",
               borderRadius: 3,
               mr: 2,
+              "&:hover": { bgcolor: "#b300b3ff" },
             }}
           >
             Play

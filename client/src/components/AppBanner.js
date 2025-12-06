@@ -151,7 +151,7 @@ export default function AppBanner() {
   let menu = loggedOutMenu;
   if (auth.loggedIn) {
     menu = loggedInMenu;
-    if (location.pathname === "/") {
+    if (location.pathname === "/" || location.pathname === "/song-catalog/") {
       centerContent = (
         <Box
           sx={{ display: "flex", alignItems: "center", height: "100%", mx: 2 }}
@@ -170,7 +170,17 @@ export default function AppBanner() {
               textTransform: "none",
             }}
           >
-            Playlists
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                display: "block",
+                width: "100%",
+              }}
+            >
+              Playlists
+            </Link>
           </Button>
           <Button
             component={Link}
@@ -186,7 +196,17 @@ export default function AppBanner() {
               whiteSpace: "nowrap",
             }}
           >
-            Song Catalog
+            <Link
+              to="/song-catalog/"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                display: "block",
+                width: "100%",
+              }}
+            >
+              Song Catalog
+            </Link>
           </Button>
           <Typography
             variant="h3"

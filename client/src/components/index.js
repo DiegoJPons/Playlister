@@ -14,6 +14,7 @@ import WelcomeScreen from "./WelcomeScreen";
 
 import WorkspaceScreen from "./WorkspaceScreen";
 import EditAccountScreen from "./EditAccountScreen";
+import SongCatalogScreen from "./SongCatalogScreen";
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -36,4 +37,5 @@ export {
   WelcomeScreen,
   WorkspaceScreen,
   EditAccountScreen,
+  SongCatalogScreen,
 };

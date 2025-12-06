@@ -10,6 +10,7 @@ import {
   CreateAccountScreen,
   WorkspaceScreen,
   EditAccountScreen,
+  SongCatalogScreen,
 } from "./components";
 /*
   This is the entry-point for our application. Notice that we
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/register/" exact component={CreateAccountScreen} />
             <Route path="/edit-account/" exact component={EditAccountScreen} />
             <Route path="/playlist/:id" exact component={WorkspaceScreen} />
+            <Route path="/song-catalog/" exact component={SongCatalogScreen} />
           </Switch>
         </GlobalStoreContextProvider>
       </AuthContextProvider>

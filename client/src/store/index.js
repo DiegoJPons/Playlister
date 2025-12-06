@@ -27,6 +27,7 @@ export const GlobalStoreActionType = {
   CREATE_NEW_LIST: "CREATE_NEW_LIST",
   LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
   MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+  MARK_LIST_FOR_PLAY: "MARK_LIST_FOR_PLAY",
   SET_CURRENT_LIST: "SET_CURRENT_LIST",
   SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
   EDIT_SONG: "EDIT_SONG",
@@ -41,6 +42,8 @@ const CurrentModal = {
   NONE: "NONE",
   DELETE_LIST: "DELETE_LIST",
   EDIT_SONG: "EDIT_SONG",
+  PLAY_LIST: "PLAY_LIST",
+  EDIT_LIST: "EDIT_LIST",
   ERROR: "ERROR",
 };
 
@@ -58,6 +61,10 @@ function GlobalStoreContextProvider(props) {
     listNameActive: false,
     listIdMarkedForDeletion: null,
     listMarkedForDeletion: null,
+    listIdMarkedForPlay: null,
+    listMarkedForPlay: null,
+    listIdMarkedForEdit: null,
+    listMarkedForEdit: null,
   });
   const history = useHistory();
 
@@ -140,6 +147,34 @@ function GlobalStoreContextProvider(props) {
           listNameActive: false,
           listIdMarkedForDeletion: payload.id,
           listMarkedForDeletion: payload.playlist,
+        });
+      }
+      // PREPARE TO PLAY A LIST
+      case GlobalStoreActionType.MARK_LIST_FOR_PLAY: {
+        return setStore({
+          currentModal: CurrentModal.PLAY_LIST,
+          idNamePairs: store.idNamePairs,
+          currentList: null,
+          currentSongIndex: -1,
+          currentSong: null,
+          newListCounter: store.newListCounter,
+          listNameActive: false,
+          listIdMarkedForPlay: payload.id,
+          listMarkedForPlay: payload.playlist,
+        });
+      }
+      // PREPARE TO EDIT A LIST
+      case GlobalStoreActionType.MARK_LIST_FOR_EDIT: {
+        return setStore({
+          currentModal: CurrentModal.EDIT_LIST,
+          idNamePairs: store.idNamePairs,
+          currentList: null,
+          currentSongIndex: -1,
+          currentSong: null,
+          newListCounter: store.newListCounter,
+          listNameActive: false,
+          listIdMarkedForEdit: payload.id,
+          listMarkedForEdit: payload.playlist,
         });
       }
       // UPDATE A LIST
@@ -322,6 +357,33 @@ function GlobalStoreContextProvider(props) {
       }
     }
     asyncLoadIdNamePairs();
+  };
+
+  store.markListForEdit = function (id) {
+    async function getListToEdit(id) {
+      let response = await storeRequestSender.getPlaylistById(id);
+      if (response.data.success) {
+        let playlist = response.data.playlist;
+        storeReducer({
+          type: GlobalStoreActionType.MARK_LIST_FOR_EDIT,
+          payload: { id: id, playlist: playlist },
+        });
+      }
+    }
+    getListToEdit(id);
+  };
+  store.markListForPlay = function (id) {
+    async function getListToPlay(id) {
+      let response = await storeRequestSender.getPlaylistById(id);
+      if (response.data.success) {
+        let playlist = response.data.playlist;
+        storeReducer({
+          type: GlobalStoreActionType.MARK_LIST_FOR_PLAY,
+          payload: { id: id, playlist: playlist },
+        });
+      }
+    }
+    getListToPlay(id);
   };
 
   // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
