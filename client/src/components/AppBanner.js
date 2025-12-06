@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import AuthContext from "../auth";
 import { GlobalStoreContext } from "../store";
 
-import EditToolbar from "./EditToolbar";
-
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -149,14 +147,11 @@ export default function AppBanner() {
     </Menu>
   );
 
-  let editToolbar = "";
   let centerContent = "";
   let menu = loggedOutMenu;
   if (auth.loggedIn) {
     menu = loggedInMenu;
-    if (store.currentList) {
-      editToolbar = <EditToolbar />;
-    } else if (location.pathname === "/") {
+    if (location.pathname === "/") {
       centerContent = (
         <Box
           sx={{ display: "flex", alignItems: "center", height: "100%", mx: 2 }}
@@ -253,10 +248,7 @@ export default function AppBanner() {
               </IconButton>
             </Link>
           </Typography>
-          <Box sx={{ flexGrow: 1 }}>
-            {editToolbar}
-            {centerContent}
-          </Box>
+          <Box sx={{ flexGrow: 1 }}>{centerContent}</Box>
           <Box
             sx={{
               alignItems: "center",

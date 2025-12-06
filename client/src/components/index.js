@@ -11,7 +11,7 @@ import MUIErrorModal from "./MUIErrorModal";
 import CreateAccountScreen from "./CreateAccountScreen";
 import SongCard from "./SongCard";
 import WelcomeScreen from "./WelcomeScreen";
-import Statusbar from "./Statusbar";
+
 import WorkspaceScreen from "./WorkspaceScreen";
 import EditAccountScreen from "./EditAccountScreen";
 /*
@@ -34,7 +34,6 @@ export {
   SongCard,
   CreateAccountScreen,
   WelcomeScreen,
-  Statusbar,
   WorkspaceScreen,
   EditAccountScreen,
 };
