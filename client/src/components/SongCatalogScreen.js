@@ -1,10 +1,7 @@
 import { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../store/index.js";
-import PlaylistCard from "./PlaylistCard.js";
-import MUIDeleteModal from "./MUIDeleteModal.js";
+import SongCard from "./SongCard.js";
 
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -23,27 +20,29 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 const SongCatalogScreen = () => {
   const { store } = useContext(GlobalStoreContext);
   const [searchData, setSearchData] = useState({
-    playListName: "",
-    userName: "",
     songTitle: "",
     songArtist: "",
     songYear: "",
   });
-  const [sortText, setSortText] = useState("Listeners (Hi-Lo)");
+  const [sortText, setSortText] = useState("Listens (Hi-Lo)");
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
   useEffect(() => {
-    store.loadIdNamePairs();
+    store.loadSongCatalog();
   }, []);
 
   const sortOptions = [
-    "Listeners (Hi-Lo)",
-    "Listeners (Lo-Hi)",
-    "Playlist Name (A-Z)",
-    "Playlist Name (Z-A)",
-    "User Name (A-Z)",
-    "User Name (Z-A)",
+    "Listens (Hi-Lo)",
+    "Listens (Lo-Hi)",
+    "Playlist (Hi-Lo)",
+    "Playlist (Lo-Hi)",
+    "Title (A-Z)",
+    "Title (Z-A)",
+    "Artist (A-Z)",
+    "Artist (Z-A)",
+    "Year (Hi-Lo)",
+    "Year (Lo-Hi)",
   ];
 
   const handleChange = (event) => {
@@ -61,8 +60,6 @@ const SongCatalogScreen = () => {
       setSearchData({ ...searchData, [field]: "" });
     } else {
       setSearchData({
-        playListName: "",
-        userName: "",
         songTitle: "",
         songArtist: "",
         songYear: "",
@@ -83,13 +80,19 @@ const SongCatalogScreen = () => {
     handleSortClose();
   };
 
-  let listCard = "";
-  if (store) {
-    listCard = (
+  let songCard = "";
+  if (store.songCatalog && Array.isArray(store.songCatalog)) {
+    songCard = (
       <List sx={{ width: "100%", mb: "20px" }}>
-        {store.idNamePairs.map((pair) => (
-          <PlaylistCard key={pair._id} idNamePair={pair} selected={false} />
-        ))}
+        {store.songCatalog.map(
+          (
+            song,
+            index // Map over songCatalog
+          ) => (
+            // Pass the expected props: song object and index
+            <SongCard key={song._id} song={song} index={index} />
+          )
+        )}
       </List>
     );
   }
@@ -106,7 +109,7 @@ const SongCatalogScreen = () => {
         sx={{
           width: "50%",
           pr: 3,
-          pt: 4,
+          pt: 2,
           position: "relative",
         }}
       >
@@ -116,81 +119,13 @@ const SongCatalogScreen = () => {
         >
           Songs Catalog
         </Typography>
-        <Grid container spacing={4} sx={{ mt: 5 }}>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
             <TextField
               name="songTitle"
               fullWidth
               id="songTitle"
               label="by Title"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.playListName}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("playListName")}
-            />
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="songArtist"
-              fullWidth
-              id="songArtist"
-              label="by Artist"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.userName}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("userName")}
-            />
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="songYear"
-              fullWidth
-              id="songYear"
-              label="by Year"
               variant="filled"
               onChange={handleChange}
               value={searchData.songTitle}
@@ -219,11 +154,79 @@ const SongCatalogScreen = () => {
               onClick={() => handleClear("songTitle")}
             />
           </Grid>
+          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+            <TextField
+              name="songArtist"
+              fullWidth
+              id="songArtist"
+              label="by Artist"
+              variant="filled"
+              onChange={handleChange}
+              value={searchData.songArtist}
+              sx={{
+                bgcolor: "rgb(216, 240, 247)",
+                "& .MuiFilledInput-root": {
+                  width: "full",
+                  height: "75px",
+                },
+                "& .MuiInputLabel-root": {
+                  top: 10,
+                  color: "black",
+                  fontSize: "20px",
+                },
+              }}
+            />
+            <HighlightOffIcon
+              sx={{
+                fontSize: "40px",
+                position: "absolute",
+                right: 5,
+                top: "60%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={() => handleClear("songArtist")}
+            />
+          </Grid>
+          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+            <TextField
+              name="songYear"
+              fullWidth
+              id="songYear"
+              label="by Year"
+              variant="filled"
+              onChange={handleChange}
+              value={searchData.songYear}
+              sx={{
+                bgcolor: "rgb(216, 240, 247)",
+                "& .MuiFilledInput-root": {
+                  width: "full",
+                  height: "75px",
+                },
+                "& .MuiInputLabel-root": {
+                  top: 10,
+                  color: "black",
+                  fontSize: "20px",
+                },
+              }}
+            />
+            <HighlightOffIcon
+              sx={{
+                fontSize: "40px",
+                position: "absolute",
+                right: 5,
+                top: "60%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={() => handleClear("songYear")}
+            />
+          </Grid>
         </Grid>
         <Box
           sx={{
             position: "absolute",
-            bottom: 300,
+            bottom: 340,
             left: 0,
             width: "90%",
             display: "flex",
@@ -317,7 +320,7 @@ const SongCatalogScreen = () => {
             variant="h4"
             sx={{ fontWeight: "600", color: "black", ml: "auto" }}
           >
-            {store.idNamePairs.length} Songs
+            {store.songCatalog?.length} Songs
           </Typography>
         </Box>
 
@@ -344,9 +347,9 @@ const SongCatalogScreen = () => {
             mb: 23,
           }}
         >
-          {listCard}
+          {songCard}
         </Box>
-        <MUIDeleteModal />
+
         <Button
           type="button"
           variant="contained"
@@ -354,7 +357,7 @@ const SongCatalogScreen = () => {
             fontSize: "20px",
             position: "absolute",
             bottom: 42,
-            right: 680,
+            right: 620,
             padding: 3,
             bgcolor: "rgba(31, 155, 192, 1)",
             borderRadius: 5,

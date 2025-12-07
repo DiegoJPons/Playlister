@@ -21,7 +21,7 @@ const style1 = {
   overflow: "hidden",
 };
 
-export default function MUIDeleteModal() {
+export default function MUIRemoveSongModal() {
   const { store } = useContext(GlobalStoreContext);
   let name = "";
   if (store.listMarkedForDeletion) {
@@ -36,7 +36,7 @@ export default function MUIDeleteModal() {
 
   return (
     <Modal
-      open={store.currentModal === "DELETE_LIST"}
+      open={store.currentModal === "REMOVE_SONG"}
       slotProps={{
         backdrop: {
           style: { backgroundColor: "transparent" },

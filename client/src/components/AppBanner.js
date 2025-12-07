@@ -168,6 +168,9 @@ export default function AppBanner() {
               fontWeight: "bold",
               borderRadius: 2,
               textTransform: "none",
+              "&:hover": {
+                bgcolor: "rgba(80, 80, 80, 1)",
+              },
             }}
           >
             <Link

@@ -1,8 +1,6 @@
 import { useContext, useState } from "react";
 import { GlobalStoreContext } from "../store";
 import Box from "@mui/material/Box";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import TextField from "@mui/material/TextField";
@@ -50,6 +48,10 @@ function PlaylistCard(props) {
     }
   }
 
+  function handleEditList(event, id) {
+    event.stopPropagation();
+    store.markListForEdit(id);
+  }
   function handlePlayPlaylist(event, id) {
     event.stopPropagation();
     store.markListForPlay(id);
@@ -114,7 +116,10 @@ function PlaylistCard(props) {
         sx={{ display: "flex", alignItems: "center", width: "100%", p: "10px" }}
       >
         <Avatar
-          src={idNamePair.avatarUrl || "/placeholder.png"}
+          src={
+            idNamePair.avatar ||
+            "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg"
+          }
           sx={{ width: 50, height: 50, mr: 2, ml: 2 }}
         />
 
@@ -123,7 +128,7 @@ function PlaylistCard(props) {
             {idNamePair.name}
           </Typography>
           <Typography variant="body1" sx={{ color: "gray" }}>
-            {idNamePair.ownerName || "JoeShmo"}
+            {idNamePair.userName || "JoeShmo"}
           </Typography>
         </Box>
         <Box
@@ -157,7 +162,7 @@ function PlaylistCard(props) {
           <Button
             onClick={(event) => {
               event.stopPropagation();
-              handleToggleEdit(event);
+              handleEditList(event, idNamePair._id);
             }}
             aria-label="edit"
             sx={{

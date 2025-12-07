@@ -5,8 +5,6 @@ import MUIDeleteModal from "./MUIDeleteModal.js";
 import MUIPlayPlaylistModal from "./MUIPlayPlaylistModal";
 import MUIEditPlaylistModal from "./MUIEditPlaylistModal";
 
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -52,7 +50,7 @@ const PlaylistsScreen = () => {
     const { name, value } = event.target;
     setSearchData({ ...searchData, [name]: value });
   };
-  function handleCreateNewList() {
+  function handleCreateNewList(id) {
     store.createNewList();
   }
 
@@ -299,7 +297,7 @@ const PlaylistsScreen = () => {
             display: "flex",
             gap: 20,
             mt: 4,
-            mb: 5,
+            mb: 1,
           }}
         >
           <Button
@@ -344,6 +342,7 @@ const PlaylistsScreen = () => {
         }}
       />
 
+      {/* Right Side */}
       <Box
         sx={{
           width: "50%",
@@ -413,14 +412,14 @@ const PlaylistsScreen = () => {
           sx={{
             flexGrow: 1,
             overflowY: "scroll",
-            mb: 23,
+            mb: 11,
           }}
         >
           {listCard}
         </Box>
         <MUIDeleteModal />
         <MUIPlayPlaylistModal />
-        {/* <MUIEditPlaylistModal /> */}
+        <MUIEditPlaylistModal />
         <Button
           type="button"
           variant="contained"
@@ -428,8 +427,8 @@ const PlaylistsScreen = () => {
             textTransform: "none",
             fontSize: "25px",
             position: "absolute",
-            bottom: 42,
-            right: 680,
+            bottom: 10,
+            right: 600,
             padding: 2,
             bgcolor: "rgba(31, 155, 192, 1)",
             borderRadius: 5,
