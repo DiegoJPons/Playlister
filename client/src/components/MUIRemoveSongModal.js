@@ -36,7 +36,7 @@ export default function MUIRemoveSongModal() {
 
   return (
     <Modal
-      open={store.currentModal === "REMOVE_SONG"}
+      open={store.currentModal === "REMOVE_SONG_FROM_CATALOG"}
       slotProps={{
         backdrop: {
           style: { backgroundColor: "transparent" },
@@ -54,7 +54,7 @@ export default function MUIRemoveSongModal() {
           }}
         >
           <Typography sx={{ fontWeight: "1000" }} variant="h4" component="h2">
-            Delete Playlist
+            Remove Song
           </Typography>
         </Box>
 
@@ -73,20 +73,7 @@ export default function MUIRemoveSongModal() {
             variant="h1"
             sx={{ color: "rgba(73, 69, 79, 1)", m: 13, textAlign: "center" }}
           >
-            Are you sure you want to delete the{" "}
-            <Typography
-              display="inline"
-              variant="h1"
-              sx={{
-                color: "#820747CF",
-                fontWeight: "bold",
-                mt: 2,
-                textDecoration: "underline",
-              }}
-            >
-              {name}
-            </Typography>{" "}
-            playlist?
+            Are you sure you want to remove the song from the catalog?
           </Typography>
         </Box>
 
@@ -94,7 +81,7 @@ export default function MUIRemoveSongModal() {
           variant="h4"
           sx={{ textAlign: "center", color: "rgba(73, 69, 79, 1)" }}
         >
-          Doing so means it will be permanently removed.
+          Doing so will remove it from all of your playlists.
         </Typography>
 
         <Box
@@ -129,7 +116,7 @@ export default function MUIRemoveSongModal() {
             }}
             onClick={handleDeleteList}
           >
-            Delete Playlist
+            Remove Song
           </Button>
           <Button
             sx={{

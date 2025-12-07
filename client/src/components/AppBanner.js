@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AuthContext from "../auth";
 import { GlobalStoreContext } from "../store";
 
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import Avatar from "@mui/material/Avatar";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -228,11 +228,21 @@ export default function AppBanner() {
   }
 
   function getAccountMenu(loggedIn) {
-    let userInitials = auth.getUserInitials();
-    console.log("userInitials: " + userInitials);
     if (loggedIn)
-      return <AccountCircle sx={{ fontSize: 68, color: "white" }} />;
-    else return <AccountCircle sx={{ fontSize: 68, color: "white" }} />;
+      return (
+        <Avatar
+          src={auth.user.avatar}
+          sx={{
+            bgcolor: "white", // Background color of the avatar
+            color: "#3A64C4", // Text color of the initials
+            fontSize: 32, // Size of the initials
+            width: 60, // Width of the circle
+            height: 60, // Height of the circle
+            fontWeight: "bold",
+          }}
+        />
+      );
+    else return <Avatar sx={{ fontSize: 80, color: "white" }} />;
   }
 
   return (

@@ -104,15 +104,13 @@ getPlaylistById = async (req, res) => {
       await User.findOne({ email: list.ownerEmail }, (err, user) => {
         console.log("user._id: " + user._id);
         console.log("req.userId: " + req.userId);
-        if (user._id == req.userId) {
-          console.log("correct user!");
-          return res.status(200).json({ success: true, playlist: list });
-        } else {
-          console.log("incorrect user!");
-          return res
-            .status(400)
-            .json({ success: false, description: "authentication error" });
-        }
+
+        return res.status(200).json({
+          success: true,
+          playlist: list,
+          userName: user.userName,
+          avatar: user.avatar,
+        });
       });
     }
     asyncFindUser(list);
@@ -161,24 +159,92 @@ getPlaylistPairs = async (req, res) => {
     asyncFindList(user.email);
   }).catch((err) => console.log(err));
 };
-getPlaylists = async (req, res) => {
+
+getPlaylistSearch = async (req, res) => {
   if (auth.verifyUser(req) === null) {
     return res.status(400).json({
       errorMessage: "UNAUTHORIZED",
     });
   }
-  await Playlist.find({}, (err, playlists) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-    if (!playlists.length) {
+
+  const { playlistName, userName, songTitle, songArtist, songYear } = req.query;
+
+  const partialMatch = (target, query) => {
+    if (!query) return true;
+    return target && target.toLowerCase().includes(query.toLowerCase());
+  };
+
+  try {
+    const playlists = await Playlist.find({});
+
+    if (!playlists || playlists.length === 0) {
       return res
         .status(404)
         .json({ success: false, error: `Playlists not found` });
     }
-    return res.status(200).json({ success: true, data: playlists });
-  }).catch((err) => console.log(err));
+
+    let searchResults = playlists.filter((p) => {
+      let matches = true;
+      if (playlistName && !partialMatch(p.name, playlistName)) {
+        matches = false;
+        return false;
+      }
+      if (userName && !partialMatch(p.userName, userName)) {
+        matches = false;
+        return false;
+      }
+
+      const hasSongCriteria = songTitle || songArtist || songYear;
+      if (hasSongCriteria) {
+        const songMatches = p.songs.some((song) => {
+          let songPasses = true;
+          if (songTitle && !partialMatch(song.title, songTitle)) {
+            songPasses = false;
+          }
+          if (songArtist && !partialMatch(song.artist, songArtist)) {
+            songPasses = false;
+          }
+          if (songYear) {
+            const yearInt = parseInt(songYear);
+            if (isNaN(yearInt) || song.year !== yearInt) {
+              songPasses = false;
+            }
+          }
+          return songPasses;
+        });
+        if (!songMatches) {
+          matches = false;
+          return false;
+        }
+      }
+      return matches;
+    });
+
+    const listOwners = searchResults.map(async (p) => {
+      const owner = await User.findOne(
+        { email: p.ownerEmail },
+        "avatar"
+      ).exec();
+      return {
+        _id: p._id,
+        name: p.name,
+        userName: p.userName,
+        avatar: owner ? owner.avatar : null,
+        listeners: p.listenersCount,
+      };
+    });
+
+    const results = await Promise.all(listOwners);
+
+    return res.status(200).json({ success: true, data: results });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error during playlist search." });
+  }
 };
+
 updatePlaylist = async (req, res) => {
   if (auth.verifyUser(req) === null) {
     return res.status(400).json({
@@ -234,7 +300,7 @@ updatePlaylist = async (req, res) => {
               });
             });
         } else {
-          console.log("incorrect user!");
+          console.log("incorrect user in line 300!");
           return res
             .status(400)
             .json({ success: false, description: "authentication error" });
@@ -249,6 +315,6 @@ module.exports = {
   deletePlaylist,
   getPlaylistById,
   getPlaylistPairs,
-  getPlaylists,
+  getPlaylistSearch,
   updatePlaylist,
 };

@@ -66,6 +66,7 @@ export default function YouTubePlayer({
   onStatusChange,
   onNextSong,
 }) {
+  console.log("YouTubePlayer rendered. youtubeId prop:", youtubeId);
   const playerContainerRef = useRef(null);
 
   useEffect(() => {
@@ -85,14 +86,30 @@ export default function YouTubePlayer({
   }, [onStatusChange]);
 
   useEffect(() => {
+    if (!youtubeId) {
+      return;
+    }
+
+    if (player && player.loadVideoById) {
+      const currentVideoId = player.getVideoData
+        ? player.getVideoData()?.video_id
+        : null;
+      if (currentVideoId !== youtubeId) {
+        player.loadVideoById(youtubeId);
+      }
+      return;
+    }
+
     const createPlayer = () => {
       if (!window.YT || !playerContainerRef.current) return;
+
       if (player) {
         player.destroy();
         player = null;
       }
+
       player = new window.YT.Player(playerContainerRef.current, {
-        videoId: youtubeId || "dQw4w9WgXcQ",
+        videoId: youtubeId,
         height: "390",
         width: "640",
         playerVars: {
@@ -118,7 +135,7 @@ export default function YouTubePlayer({
       currentPlaylist = [];
       currentIndex = 0;
     };
-  }, []);
+  }, [youtubeId]); // 💡 CHANGE 3: Add youtubeId to dependencies
 
   useEffect(() => {
     if (player && player.loadVideoById && youtubeId) {
@@ -145,7 +162,7 @@ export default function YouTubePlayer({
     };
   }, [onNextSong]);
 
-  return (
+  return youtubeId ? (
     <div
       ref={playerContainerRef}
       id="youtube-player-iframe"
@@ -157,5 +174,5 @@ export default function YouTubePlayer({
         height: "50%",
       }}
     ></div>
-  );
+  ) : null;
 }

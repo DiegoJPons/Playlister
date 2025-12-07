@@ -103,7 +103,7 @@ export default function EditAccountScreen() {
         >
           <Avatar
             alt="User Avatar"
-            src={formData.avatarUrl || defaultAvatar}
+            src={formData.avatarUrl || auth.user.avatar}
             sx={{
               width: 60,
               height: 60,

@@ -23,7 +23,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 const PlaylistsScreen = () => {
   const { store } = useContext(GlobalStoreContext);
   const [searchData, setSearchData] = useState({
-    playListName: "",
+    playlistName: "",
     userName: "",
     songTitle: "",
     songArtist: "",
@@ -54,19 +54,34 @@ const PlaylistsScreen = () => {
     store.createNewList();
   }
 
-  const handleSearch = (e) => {};
+  const handleSearch = (e) => {
+    e.preventDefault();
+    store.searchPlaylists(searchData);
+  };
 
   const handleClear = (field) => {
     if (field) {
-      setSearchData({ ...searchData, [field]: "" });
+      const newSearchData = { ...searchData, [field]: "" };
+      setSearchData(newSearchData);
+
+      const allFieldsEmpty = Object.values(newSearchData).every(
+        (value) => value === ""
+      );
+      if (allFieldsEmpty) {
+        store.loadIdNamePairs();
+      } else {
+        store.searchPlaylists(newSearchData);
+      }
     } else {
-      setSearchData({
-        playListName: "",
+      const allCleared = {
+        playlistName: "",
         userName: "",
         songTitle: "",
         songArtist: "",
         songYear: "",
-      });
+      };
+      setSearchData(allCleared);
+      store.loadIdNamePairs();
     }
   };
 
@@ -119,13 +134,13 @@ const PlaylistsScreen = () => {
         <Grid container spacing={4} sx={{ mt: 5 }}>
           <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
             <TextField
-              name="playListName"
+              name="playlistName"
               fullWidth
-              id="playListName"
+              id="playlistName"
               label="by Playlist Name"
               variant="filled"
               onChange={handleChange}
-              value={searchData.playListName}
+              value={searchData.playlistName}
               sx={{
                 bgcolor: "rgb(216, 240, 247)",
                 "& .MuiFilledInput-root": {
@@ -148,7 +163,7 @@ const PlaylistsScreen = () => {
                 transform: "translateY(-50%)",
                 cursor: "pointer",
               }}
-              onClick={() => handleClear("playListName")}
+              onClick={() => handleClear("playlistName")}
             />
           </Grid>
           <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>

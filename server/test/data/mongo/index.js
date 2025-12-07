@@ -39,6 +39,10 @@ async function resetMongo() {
   }));
   const insertedUsers = await User.insertMany(transformedUsers);
   console.log("User filled");
+  const userMap = new Map();
+  insertedUsers.forEach((user) => {
+    userMap.set(user.email, user.userName);
+  });
 
   const uniqueSongsMap = new Map();
 
@@ -84,10 +88,13 @@ async function resetMongo() {
         };
       });
 
+    const ownerUserName = userMap.get(playlist.ownerEmail);
+
     return {
       ...playlist,
       songs: songsArray,
       listenersCount: getRandom(),
+      userName: ownerUserName,
     };
   });
 

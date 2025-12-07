@@ -38,6 +38,7 @@ export default function MUIPlayPlaylistModal() {
 
   if (store.listMarkedForPlay) {
     name = store.listMarkedForPlay.name;
+    owner = store.userName;
   }
 
   function handleCloseModal(event) {
@@ -197,7 +198,7 @@ export default function MUIPlayPlaylistModal() {
               }}
             >
               <Avatar
-                src={"/placeholder.png"}
+                src={store.avatar}
                 sx={{
                   width: 60,
                   height: 60,

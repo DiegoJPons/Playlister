@@ -6,6 +6,7 @@ const playlistSchema = new Schema(
   {
     name: { type: String, required: true },
     ownerEmail: { type: String, required: true },
+    userName: { type: String, required: true },
     listenersCount: { type: Number, required: true, default: 0 },
     songs: {
       type: [

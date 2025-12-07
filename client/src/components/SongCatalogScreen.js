@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../store/index.js";
 import SongCard from "./SongCard.js";
+import MUIRemoveSongModal from "./MUIRemoveSongModal.js";
 
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
@@ -16,6 +17,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Link, Menu } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import YouTubePlayer from "./YoutubePlayer.js";
 
 const SongCatalogScreen = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -84,18 +86,13 @@ const SongCatalogScreen = () => {
   if (store.songCatalog && Array.isArray(store.songCatalog)) {
     songCard = (
       <List sx={{ width: "100%", mb: "20px" }}>
-        {store.songCatalog.map(
-          (
-            song,
-            index // Map over songCatalog
-          ) => (
-            // Pass the expected props: song object and index
-            <SongCard key={song._id} song={song} index={index} />
-          )
-        )}
+        {store.songCatalog.map((song, index) => (
+          <SongCard key={song._id} song={song} index={index} />
+        ))}
       </List>
     );
   }
+
   return (
     <Box
       sx={{
@@ -265,6 +262,19 @@ const SongCatalogScreen = () => {
             Clear
           </Button>
         </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            top: 565,
+            left: 70,
+            width: "600px",
+            height: "600px",
+          }}
+        >
+          <YouTubePlayer
+            youtubeId={store.currentSongToPlay?.youTubeId || null}
+          />
+        </Box>
       </Box>
 
       <Divider
@@ -368,6 +378,7 @@ const SongCatalogScreen = () => {
           New Song
         </Button>
       </Box>
+      <MUIRemoveSongModal />
     </Box>
   );
 };

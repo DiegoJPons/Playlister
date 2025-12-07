@@ -41,6 +41,9 @@ export const updatePlaylistById = (id, playlist) => {
 };
 
 export const getSongCatalog = () => api.get(`/songs/catalog`);
+export const getPlaylistSearch = (searchCriteria) => {
+  return api.get(`/playlist/search-result`, { params: searchCriteria });
+};
 
 const apis = {
   createPlaylist,
@@ -49,6 +52,7 @@ const apis = {
   getPlaylistPairs,
   updatePlaylistById,
   getSongCatalog,
+  getPlaylistSearch,
 };
 
 export default apis;
