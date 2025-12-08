@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { GlobalStoreContext } from "../store";
+import AuthContext from "../auth";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -9,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 function SongCard(props) {
   const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
   const { song, index } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -16,6 +18,27 @@ function SongCard(props) {
 
   const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
   const isSubMenuOpen = Boolean(subMenuAnchorEl);
+
+  const isOwner = auth.user._id === song.ownerId;
+
+  // Get lists with last opened playlist first
+  const originalPlaylists = store.idNamePairs || [];
+  const lastOpenedId = store.lastViewedPlaylistId;
+
+  let ownedLists = [];
+
+  const lastOpenedIndex = originalPlaylists.findIndex(
+    (playlist) => playlist._id === lastOpenedId
+  );
+
+  if (lastOpenedIndex !== -1) {
+    const temp = [...originalPlaylists];
+    let lastOpened = temp.splice(lastOpenedIndex, 1)[0];
+    ownedLists = temp;
+    ownedLists.unshift(lastOpened);
+  } else {
+    ownedLists = originalPlaylists;
+  }
 
   // Elipses menu functions
   const handleMenuOpen = (event) => {
@@ -146,26 +169,30 @@ function SongCard(props) {
         >
           Add to Playlist
         </MenuItem>
-        <MenuItem
-          sx={{
-            "&:hover": {
-              bgcolor: "rgba(200, 171, 255, 1)",
-            },
-          }}
-          onClick={handleEditSong}
-        >
-          Edit Song
-        </MenuItem>
-        <MenuItem
-          sx={{
-            "&:hover": {
-              bgcolor: "rgba(200, 171, 255, 1)",
-            },
-          }}
-          onClick={handleRemoveFromCatalog}
-        >
-          Remove from Catalog
-        </MenuItem>
+        {isOwner && (
+          <>
+            <MenuItem
+              sx={{
+                "&:hover": {
+                  bgcolor: "rgba(200, 171, 255, 1)",
+                },
+              }}
+              onClick={handleEditSong}
+            >
+              Edit Song
+            </MenuItem>
+            <MenuItem
+              sx={{
+                "&:hover": {
+                  bgcolor: "rgba(200, 171, 255, 1)",
+                },
+              }}
+              onClick={handleRemoveFromCatalog}
+            >
+              Remove from Catalog
+            </MenuItem>{" "}
+          </>
+        )}
       </Menu>
       <Menu
         anchorEl={subMenuAnchorEl}
@@ -189,19 +216,18 @@ function SongCard(props) {
           sx: { padding: 0 },
         }}
       >
-        {store.idNamePairs &&
-          store.idNamePairs.map((playlist) => (
-            <MenuItem
-              key={playlist._id}
-              onClick={(event) => handleSelectPlaylist(event, playlist._id)}
-              sx={{
-                bgcolor: "rgba(252, 206, 206, 1)",
-                "&:hover": { bgcolor: "rgba(255, 136, 136, 1)" },
-              }}
-            >
-              {playlist.name}
-            </MenuItem>
-          ))}
+        {ownedLists.map((playlist) => (
+          <MenuItem
+            key={playlist._id}
+            onClick={(event) => handleSelectPlaylist(event, playlist._id)}
+            sx={{
+              bgcolor: "rgba(252, 206, 206, 1)",
+              "&:hover": { bgcolor: "rgba(255, 136, 136, 1)" },
+            }}
+          >
+            {playlist.name}
+          </MenuItem>
+        ))}
       </Menu>
     </Box>
   );

@@ -53,6 +53,11 @@ export const updateSong = (payload) => {
   return api.put(`/song/${payload._id}`, payload);
 };
 
+export const addSongToPlaylist = (id, song) => {
+  return api.put(`/playlist/${id}/song/`, {
+    song: song,
+  });
+};
 const apis = {
   createPlaylist,
   deletePlaylistById,
@@ -65,6 +70,7 @@ const apis = {
   removeSongFromCatalog,
   createSong,
   updateSong,
+  addSongToPlaylist,
 };
 
 export default apis;

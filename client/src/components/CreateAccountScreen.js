@@ -60,6 +60,24 @@ export default function CreateAccountScreen() {
     }
   };
 
+  const canComplete = () => {
+    const requiredFieldsFilled =
+      formData.userName.trim() !== "" &&
+      formData.email.trim() !== "" &&
+      formData.password.trim() !== "" &&
+      formData.passwordConfirm.trim() !== "";
+
+    if (!requiredFieldsFilled) {
+      return false;
+    }
+
+    if (formData.password !== formData.passwordConfirm) {
+      return false;
+    }
+
+    return true;
+  };
+
   let modalJSX = "";
   console.log(auth);
   if (auth.errorMessage !== null) {
@@ -232,6 +250,7 @@ export default function CreateAccountScreen() {
             fullWidth
             variant="contained"
             sx={{ mt: 4, mb: 2, bgcolor: "black" }}
+            disabled={!canComplete()}
           >
             Create Account
           </Button>

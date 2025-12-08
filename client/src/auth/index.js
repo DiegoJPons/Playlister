@@ -11,6 +11,7 @@ export const AuthActionType = {
   LOGIN_USER: "LOGIN_USER",
   LOGOUT_USER: "LOGOUT_USER",
   REGISTER_USER: "REGISTER_USER",
+  UPDATE_USER: "UPDATE_USER",
 };
 
 function AuthContextProvider(props) {
@@ -56,8 +57,50 @@ function AuthContextProvider(props) {
           errorMessage: payload.errorMessage,
         });
       }
+      case AuthActionType.UPDATE_USER: {
+        return setAuth({
+          user: payload.user,
+          loggedIn: true,
+          errorMessage: payload.errorMessage,
+        });
+      }
       default:
         return auth;
+    }
+  };
+
+  auth.updateUser = async function (
+    userName,
+    password,
+    passwordConfirm,
+    avatarUrl
+  ) {
+    console.log("UPDATING USER");
+    try {
+      const response = await authRequestSender.updateUser(
+        userName,
+        password,
+        passwordConfirm,
+        avatarUrl
+      );
+
+      if (response.status === 200) {
+        authReducer({
+          type: AuthActionType.UPDATE_USER,
+          payload: {
+            user: response.data.user,
+            errorMessage: null,
+          },
+        });
+      }
+    } catch (error) {
+      authReducer({
+        type: AuthActionType.UPDATE_USER,
+        payload: {
+          user: auth.user,
+          errorMessage: error.response.data.errorMessage,
+        },
+      });
     }
   };
 
@@ -78,7 +121,8 @@ function AuthContextProvider(props) {
     userName,
     email,
     password,
-    passwordVerify
+    passwordVerify,
+    avatarUrl
   ) {
     console.log("REGISTERING USER");
     try {
@@ -86,7 +130,8 @@ function AuthContextProvider(props) {
         userName,
         email,
         password,
-        passwordVerify
+        passwordVerify,
+        avatarUrl
       );
       if (response.status === 200) {
         console.log("Registered Sucessfully");

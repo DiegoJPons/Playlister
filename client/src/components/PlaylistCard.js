@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { GlobalStoreContext } from "../store";
+import AuthContext from "../auth";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
@@ -12,10 +13,13 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 function PlaylistCard(props) {
   const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
   const [editActive, setEditActive] = useState(false);
   const [text, setText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { idNamePair } = props;
+
+  const isOwner = auth.user._id === idNamePair.ownerId;
 
   const handleToggleExpand = (event) => {
     event.stopPropagation();
@@ -143,39 +147,43 @@ function PlaylistCard(props) {
             },
           }}
         >
-          <Button
-            onClick={(event) => {
-              event.stopPropagation();
-              handleDeleteList(event, idNamePair._id);
-            }}
-            sx={{
-              padding: 3,
-              textTransform: "none",
-              bgcolor: "#D32F2F",
-              color: "white",
-              borderRadius: 3,
-              "&:hover": { bgcolor: "#9e1515ff" },
-            }}
-          >
-            Delete
-          </Button>
-          <Button
-            onClick={(event) => {
-              event.stopPropagation();
-              handleEditList(event, idNamePair._id);
-            }}
-            aria-label="edit"
-            sx={{
-              padding: 3,
-              textTransform: "none",
-              bgcolor: "#3A64C4",
-              color: "white",
-              borderRadius: 3,
-              "&:hover": { bgcolor: "#1e3d8fff" },
-            }}
-          >
-            Edit
-          </Button>
+          {isOwner && (
+            <>
+              <Button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDeleteList(event, idNamePair._id);
+                }}
+                sx={{
+                  padding: 3,
+                  textTransform: "none",
+                  bgcolor: "#D32F2F",
+                  color: "white",
+                  borderRadius: 3,
+                  "&:hover": { bgcolor: "#9e1515ff" },
+                }}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleEditList(event, idNamePair._id);
+                }}
+                aria-label="edit"
+                sx={{
+                  padding: 3,
+                  textTransform: "none",
+                  bgcolor: "#3A64C4",
+                  color: "white",
+                  borderRadius: 3,
+                  "&:hover": { bgcolor: "#1e3d8fff" },
+                }}
+              >
+                Edit
+              </Button>
+            </>
+          )}
           <Button
             onClick={(event) => {
               event.stopPropagation();

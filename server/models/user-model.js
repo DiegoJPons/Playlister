@@ -5,6 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 const UserSchema = new Schema(
   {
     userName: { type: String, required: true },
+    isGuest: { type: Boolean, required: true, default: false },
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
     playlists: [{ type: ObjectId, ref: "Playlist" }],

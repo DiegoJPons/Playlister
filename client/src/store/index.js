@@ -111,6 +111,7 @@ function GlobalStoreContextProvider(props) {
           listMarkedForDeletion: null,
           listIdMarkedForEdit: store.listIdMarkedForEdit,
           listMarkedForEdit: payload.playlist,
+          lastViewedPlaylistId: null,
         });
       }
       // STOP EDITING THE CURRENT LIST
@@ -147,6 +148,7 @@ function GlobalStoreContextProvider(props) {
           listMarkedForPlay: null,
           listIdMarkedForEdit: payload.playlist._id,
           listMarkedForEdit: payload.playlist,
+          lastViewedPlaylistId: payload.playlist._id,
         });
       }
       // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -167,6 +169,7 @@ function GlobalStoreContextProvider(props) {
           listIdMarkedForEdit: null,
           listMarkedForEdit: null,
           currentSongToPlay: store.currentSongToPlay,
+          lastViewedPlaylistId: store.lastViewedPlaylistId,
         });
       }
       // PREPARE TO DELETE A LIST
@@ -203,6 +206,7 @@ function GlobalStoreContextProvider(props) {
           listMarkedForEdit: null,
           userName: payload.userName,
           avatar: payload.avatar,
+          lastViewedPlaylistId: payload.id,
         });
       }
       // PREPARE TO EDIT A LIST
@@ -219,6 +223,7 @@ function GlobalStoreContextProvider(props) {
           listMarkedForPlay: null,
           listIdMarkedForEdit: payload.id,
           listMarkedForEdit: payload.playlist,
+          lastViewedPlaylistId: payload.id,
         });
       }
       // UPDATE A LIST
@@ -312,6 +317,7 @@ function GlobalStoreContextProvider(props) {
           listIdMarkedForEdit: null,
           listMarkedForEdit: null,
           currentSongToPlay: store.currentSongToPlay,
+          lastViewedPlaylistId: store.lastViewedPlaylistId,
         });
       }
       case GlobalStoreActionType.LOAD_SONG_CATALOG: {
@@ -464,6 +470,17 @@ function GlobalStoreContextProvider(props) {
     asyncCreateNewSong(song);
   };
 
+  store.addSongToPlaylist = function (id, song) {
+    async function asyncAddSongToPlaylist(id, song) {
+      let response = await storeRequestSender.addSongToPlaylist(id, song);
+      if (response.data.success) {
+        store.loadSongCatalog();
+      } else {
+        console.log("FAILED TO ADD SONG TO PLAYLIST");
+      }
+    }
+    asyncAddSongToPlaylist(id, song);
+  };
   store.updateSong = function (songData) {
     async function asyncUpdateSong(songData) {
       const song = { ...songData, _id: store.songToEdit._id };

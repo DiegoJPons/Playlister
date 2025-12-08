@@ -24,5 +24,6 @@ router.get("/songs/catalog", auth.verify, SongController.getSongCatalog);
 router.delete("/song/:id", auth.verify, SongController.removeSongFromCatalog);
 router.post("/song/", auth.verify, SongController.createSong);
 router.put("/song/:id", auth.verify, SongController.updateSong);
+router.put("/playlist/:id/song", auth.verify, SongController.addSongToPlaylist);
 
 module.exports = router;

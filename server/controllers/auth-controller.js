@@ -19,6 +19,7 @@ getLoggedIn = async (req, res) => {
     return res.status(200).json({
       loggedIn: true,
       user: {
+        _id: loggedInUser._id,
         userName: loggedInUser.userName,
         email: loggedInUser.email,
         avatar: loggedInUser.avatar,
@@ -100,7 +101,7 @@ logoutUser = async (req, res) => {
 registerUser = async (req, res) => {
   console.log("REGISTERING USER IN BACKEND");
   try {
-    const { userName, email, password, passwordVerify } = req.body;
+    const { userName, email, password, passwordVerify, avatarUrl } = req.body;
     console.log(
       "create user: " +
         userName +
@@ -143,7 +144,7 @@ registerUser = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, salt);
     console.log("passwordHash: " + passwordHash);
 
-    const newUser = new User({ userName, email, passwordHash, avatar: "" });
+    const newUser = new User({ userName, email, passwordHash, avatarUrl });
     const savedUser = await newUser.save();
     console.log("new user saved: " + savedUser._id);
 
@@ -174,9 +175,54 @@ registerUser = async (req, res) => {
   }
 };
 
+updateUser = async (req, res) => {
+  console.log("UPDATING USER IN BACKEND");
+  try {
+    const { userName, password, passwordVerify, avatarUrl } = req.body;
+    const userId = auth.verifyUser(req);
+    if (!userId) {
+      return res.status(400).json({
+        errorMessage: "UNAUTHORIZED",
+      });
+    }
+
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.status(400).json({
+        errorMessage: "USER NOT FOUND",
+      });
+    }
+
+    user.userName = userName;
+    user.avatar = avatarUrl || "";
+
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    user.passwordHash = await bcrypt.hash(password, salt);
+
+    const updatedUser = await user.save();
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        _id: updatedUser._id,
+        userName: updatedUser.userName,
+        email: updatedUser.email,
+        avatar: updatedUser.avatar,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      errorMessage: "ERROR WHILE UPDATING USER",
+    });
+  }
+};
+
 module.exports = {
   getLoggedIn,
   registerUser,
   loginUser,
   logoutUser,
+  updateUser,
 };

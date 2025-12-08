@@ -184,10 +184,53 @@ getSongCatalogSearch = async (req, res) => {
   }
 };
 
+async function addSongToPlaylist(req, res) {
+  if (auth.verifyUser(req) === null) {
+    return res.status(400).json({
+      errorMessage: "UNAUTHORIZED",
+    });
+  }
+
+  const { id } = req.params;
+  const { song } = req.body;
+
+  if (!song) {
+    return res.status(400).json({
+      success: false,
+      error: "Missing data.",
+    });
+  }
+
+  try {
+    const playlist = await Playlist.findById(id);
+
+    if (!playlist) {
+      return res.status(404).json({
+        success: false,
+        error: "Playlist not found.",
+      });
+    }
+
+    playlist.songs.push(song);
+    await playlist.save();
+
+    return res.status(200).json({
+      success: true,
+      playlist: playlist,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Error adding song to playlist.",
+    });
+  }
+}
+
 module.exports = {
   getSongCatalog,
   getSongCatalogSearch,
   removeSongFromCatalog,
   createSong,
   updateSong,
+  addSongToPlaylist,
 };

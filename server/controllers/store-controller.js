@@ -145,6 +145,7 @@ getPlaylistPairs = async (req, res) => {
             let list = playlists[key];
             let pair = {
               _id: list._id,
+              ownerId: user._id,
               name: list.name,
               userName: user.userName,
               avatar: user.avatar,
@@ -228,6 +229,7 @@ getPlaylistSearch = async (req, res) => {
       return {
         _id: p._id,
         name: p.name,
+        ownerId: owner._id,
         userName: p.userName,
         avatar: owner ? owner.avatar : null,
         listenersCount: p.listenersCount,

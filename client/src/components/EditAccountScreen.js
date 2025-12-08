@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "../auth";
 import MUIErrorModal from "./MUIErrorModal";
 import Copyright from "./Copyright";
@@ -18,33 +18,42 @@ import { useHistory } from "react-router-dom";
 
 import { useState } from "react";
 
-const defaultAvatar =
-  "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
 export default function EditAccountScreen() {
   const history = useHistory();
   const { auth } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    userName: "",
-    email: "",
+    userName: auth.user.userName || "",
+    email: auth.user.email || "",
     password: "",
     passwordConfirm: "",
+    avatarUrl: auth.user.avatar || "",
   });
+
+  useEffect(() => {
+    if (auth.user) {
+      setFormData((prev) => ({
+        ...prev,
+        userName: auth.user.userName || "",
+        email: auth.user.email || "",
+        avatarUrl: auth.user.avatar || "",
+      }));
+    }
+  }, [auth.user]);
 
   const handleCancel = () => {
     history.goBack();
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
     auth
-      .registerUser(
-        formData.get("userName"),
-        formData.get("email"),
-        formData.get("password"),
-        formData.get("passwordConfirm"),
-        formData.get("avatarUrl")
+      .updateUser(
+        formData.userName,
+        formData.password,
+        formData.passwordConfirm,
+        formData.avatarUrl
       )
-      .then(() => history.goBack());
+      .then(() => history.goBack())
+      .catch((error) => console.error(error));
   };
 
   const handleChange = (event) => {
@@ -65,6 +74,33 @@ export default function EditAccountScreen() {
       };
       reader.readAsDataURL(file);
     }
+  };
+  const canComplete = () => {
+    if (formData.userName.trim() === "") {
+      return false;
+    }
+
+    const usernameChanged = formData.userName !== auth.user.userName;
+    const passwordsPresent = formData.password.trim() !== "";
+
+    if (!usernameChanged && !passwordsPresent) {
+      return false;
+    }
+
+    const passwordInput = formData.password.trim();
+    const passwordConfirmInput = formData.passwordConfirm.trim();
+    const passwordChanged = passwordInput !== "" || passwordConfirmInput !== "";
+
+    if (passwordChanged) {
+      if (passwordInput === "" || passwordConfirmInput === "") {
+        return false;
+      }
+      if (passwordInput !== passwordConfirmInput) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   let modalJSX = "";
@@ -111,7 +147,7 @@ export default function EditAccountScreen() {
             }}
           />
           <Button
-            type="submit"
+            type="button"
             variant="contained"
             sx={{
               bgcolor: "black",
@@ -169,18 +205,9 @@ export default function EditAccountScreen() {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={true}
                 variant="filled"
                 sx={{ bgcolor: "rgb(216, 240, 247)" }}
-              />
-              <HighlightOffIcon
-                sx={{
-                  position: "absolute",
-                  right: 5,
-                  top: "60%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleClear("email")}
               />
             </Grid>
             <Grid item xs={12} sx={{ position: "relative" }}>
@@ -240,6 +267,7 @@ export default function EditAccountScreen() {
               variant="contained"
               sx={{ flex: 1, bgcolor: "black" }}
               onClick={handleSubmit}
+              disabled={!canComplete()}
             >
               Complete
             </Button>
