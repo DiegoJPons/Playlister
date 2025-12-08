@@ -148,7 +148,7 @@ getPlaylistPairs = async (req, res) => {
               name: list.name,
               userName: user.userName,
               avatar: user.avatar,
-              listeners: list.listenersCount,
+              listenersCount: list.listenersCount,
             };
             pairs.push(pair);
           }
@@ -206,7 +206,7 @@ getPlaylistSearch = async (req, res) => {
           }
           if (songYear) {
             const yearInt = parseInt(songYear);
-            if (isNaN(yearInt) || song.year !== yearInt) {
+            if (song.year !== yearInt) {
               songPasses = false;
             }
           }
@@ -230,7 +230,7 @@ getPlaylistSearch = async (req, res) => {
         name: p.name,
         userName: p.userName,
         avatar: owner ? owner.avatar : null,
-        listeners: p.listenersCount,
+        listenersCount: p.listenersCount,
       };
     });
 

@@ -17,10 +17,6 @@ function SongCard(props) {
   const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
   const isSubMenuOpen = Boolean(subMenuAnchorEl);
 
-  function handleRemoveSong(event) {
-    store.addRemoveSongTransaction(song, index);
-  }
-
   // Elipses menu functions
   const handleMenuOpen = (event) => {
     event.stopPropagation();
@@ -28,13 +24,15 @@ function SongCard(props) {
   };
 
   const handleEditSong = (event) => {
-    handleMenuClose(event);
-    store.showEditSongModal(index, song);
+    event.stopPropagation();
+    handleMenuClose(null);
+    store.showEditSongModal(song);
   };
 
   const handleRemoveFromCatalog = (event) => {
-    handleMenuClose(event);
-    store.showRemoveSongModal(index, song);
+    event.stopPropagation();
+    handleMenuClose(null);
+    store.showRemoveSongModal(song);
   };
 
   const handleAddToPlaylist = (event) => {

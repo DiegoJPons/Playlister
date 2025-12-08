@@ -227,7 +227,7 @@ function PlaylistCard(props) {
           variant="subtitle2"
           sx={{ color: "#0084ff", fontWeight: "bold", ml: 2 }}
         >
-          {idNamePair.listeners || "137"} Listeners
+          {idNamePair.listenersCount || "0"} Listeners
         </Typography>
 
         <Box sx={{ ml: "auto", pb: 0 }}>

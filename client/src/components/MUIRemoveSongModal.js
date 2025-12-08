@@ -1,19 +1,17 @@
 import { useContext } from "react";
 import GlobalStoreContext from "../store";
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 
 const style1 = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "75%",
-  height: "85%",
+  width: "45%",
+  height: "60%",
   bgcolor: "#B0FFB5",
   border: "3px solid #000",
   display: "flex",
@@ -27,8 +25,9 @@ export default function MUIRemoveSongModal() {
   if (store.listMarkedForDeletion) {
     name = store.listMarkedForDeletion.name;
   }
-  function handleDeleteList(event) {
-    store.deleteMarkedList();
+  function handleRemoveSong(event) {
+    event.stopPropagation();
+    store.removeSongFromCatalog();
   }
   function handleCloseModal(event) {
     store.hideModals();
@@ -54,7 +53,7 @@ export default function MUIRemoveSongModal() {
           }}
         >
           <Typography sx={{ fontWeight: "1000" }} variant="h4" component="h2">
-            Remove Song
+            Remove Song?
           </Typography>
         </Box>
 
@@ -65,12 +64,12 @@ export default function MUIRemoveSongModal() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "60%",
+            height: "40%",
             textAlign: "center",
           }}
         >
           <Typography
-            variant="h1"
+            variant="h2"
             sx={{ color: "rgba(73, 69, 79, 1)", m: 13, textAlign: "center" }}
           >
             Are you sure you want to remove the song from the catalog?
@@ -90,9 +89,8 @@ export default function MUIRemoveSongModal() {
             justifyContent: "center",
             alignItems: "center",
             mt: 2,
-
             mb: 2,
-            gap: 30,
+            gap: 5,
           }}
         >
           <Button
@@ -100,11 +98,11 @@ export default function MUIRemoveSongModal() {
               textTransform: "none",
               color: "white",
               backgroundColor: "black",
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: "bold",
               p: "5px",
               mt: "95px",
-              mr: "95px",
+              ml: "95px",
               borderRadius: 6,
               pt: 1,
               pb: 1,
@@ -114,7 +112,7 @@ export default function MUIRemoveSongModal() {
                 backgroundColor: "#464545ff",
               },
             }}
-            onClick={handleDeleteList}
+            onClick={handleRemoveSong}
           >
             Remove Song
           </Button>
@@ -123,7 +121,7 @@ export default function MUIRemoveSongModal() {
               textTransform: "none",
               color: "white",
               backgroundColor: "black",
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: "bold",
               p: "5px",
               mt: "95px",

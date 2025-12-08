@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import GlobalStoreContext from "../store";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -23,24 +23,13 @@ const style1 = {
   overflow: "hidden",
 };
 
-export default function MUIEditSongModal() {
+export default function MUICreateSongModal() {
   const { store } = useContext(GlobalStoreContext);
   const [songData, setSongData] = useState({
     title: "",
     artist: "",
     year: "",
   });
-
-  useEffect(() => {
-    if (store.songToEdit) {
-      setSongData({
-        title: store.songToEdit.title || "",
-        artist: store.songToEdit.artist || "",
-        year: store.songToEdit.year || "",
-        youTubeId: store.songToEdit.youTubeId || "",
-      });
-    }
-  }, [store.songToEdit]);
 
   function canComplete() {
     const { title, artist, year, youTubeId } = songData;
@@ -63,7 +52,7 @@ export default function MUIEditSongModal() {
 
   const handleComplete = (e) => {
     e.preventDefault();
-    store.updateSong(songData);
+    store.createNewSong(songData);
   };
 
   const handleCancel = (e) => {
@@ -80,7 +69,7 @@ export default function MUIEditSongModal() {
 
   return (
     <Modal
-      open={store.currentModal === "EDIT_SONG_IN_CATALOG"}
+      open={store.currentModal === "SHOW_CREATE_SONG_MODAL"}
       slotProps={{
         backdrop: {
           style: { backgroundColor: "transparent" },
@@ -97,7 +86,7 @@ export default function MUIEditSongModal() {
           }}
         >
           <Typography sx={{ fontWeight: "1000" }} variant="h4" component="h2">
-            Edit Song
+            Create New Song
           </Typography>
         </Box>
 

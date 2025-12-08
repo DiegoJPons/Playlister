@@ -96,6 +96,7 @@ const PlaylistsScreen = () => {
   const handleSortSelect = (optionDisplay) => {
     setSortText(optionDisplay);
     handleSortClose();
+    store.sortIdNamePairs(optionDisplay);
   };
 
   let listCard = "";
@@ -131,221 +132,223 @@ const PlaylistsScreen = () => {
         >
           Playlists
         </Typography>
-        <Grid container spacing={4} sx={{ mt: 5 }}>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="playlistName"
-              fullWidth
-              id="playlistName"
-              label="by Playlist Name"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.playlistName}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("playlistName")}
-            />
+        <Box component="form" onSubmit={handleSearch} sx={{ width: "100%" }}>
+          <Grid container spacing={4} sx={{ mt: 5 }}>
+            <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+              <TextField
+                name="playlistName"
+                fullWidth
+                id="playlistName"
+                label="by Playlist Name"
+                variant="filled"
+                onChange={handleChange}
+                value={searchData.playlistName}
+                sx={{
+                  bgcolor: "rgb(216, 240, 247)",
+                  "& .MuiFilledInput-root": {
+                    width: "full",
+                    height: "75px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    top: 10,
+                    color: "black",
+                    fontSize: "20px",
+                  },
+                }}
+              />
+              <HighlightOffIcon
+                sx={{
+                  fontSize: "40px",
+                  position: "absolute",
+                  right: 5,
+                  top: "60%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClear("playlistName")}
+              />
+            </Grid>
+            <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+              <TextField
+                name="userName"
+                fullWidth
+                id="userName"
+                label="by User Name"
+                variant="filled"
+                onChange={handleChange}
+                value={searchData.userName}
+                sx={{
+                  bgcolor: "rgb(216, 240, 247)",
+                  "& .MuiFilledInput-root": {
+                    width: "full",
+                    height: "75px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    top: 10,
+                    color: "black",
+                    fontSize: "20px",
+                  },
+                }}
+              />
+              <HighlightOffIcon
+                sx={{
+                  fontSize: "40px",
+                  position: "absolute",
+                  right: 5,
+                  top: "60%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClear("userName")}
+              />
+            </Grid>
+            <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+              <TextField
+                name="songTitle"
+                fullWidth
+                id="songTitle"
+                label="by Song Title"
+                variant="filled"
+                onChange={handleChange}
+                value={searchData.songTitle}
+                sx={{
+                  bgcolor: "rgb(216, 240, 247)",
+                  "& .MuiFilledInput-root": {
+                    width: "full",
+                    height: "75px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    top: 10,
+                    color: "black",
+                    fontSize: "20px",
+                  },
+                }}
+              />
+              <HighlightOffIcon
+                sx={{
+                  fontSize: "40px",
+                  position: "absolute",
+                  right: 5,
+                  top: "60%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClear("songTitle")}
+              />
+            </Grid>
+            <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
+              <TextField
+                name="songArtist"
+                fullWidth
+                id="songArtist"
+                label="by Song Artist"
+                variant="filled"
+                onChange={handleChange}
+                value={searchData.songArtist}
+                sx={{
+                  bgcolor: "rgb(216, 240, 247)",
+                  "& .MuiFilledInput-root": {
+                    width: "full",
+                    height: "75px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    top: 10,
+                    color: "black",
+                    fontSize: "20px",
+                  },
+                }}
+              />
+              <HighlightOffIcon
+                sx={{
+                  fontSize: "40px",
+                  position: "absolute",
+                  right: 5,
+                  top: "60%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClear("songArtist")}
+              />
+            </Grid>
+            <Grid item xs={10} sx={{ position: "relative" }}>
+              <TextField
+                name="songYear"
+                fullWidth
+                id="songYear"
+                label="by Song Year"
+                variant="filled"
+                onChange={handleChange}
+                value={searchData.songYear}
+                sx={{
+                  bgcolor: "rgb(216, 240, 247)",
+                  "& .MuiFilledInput-root": {
+                    width: "full",
+                    height: "75px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    top: 10,
+                    color: "black",
+                    fontSize: "20px",
+                  },
+                }}
+              />
+              <HighlightOffIcon
+                sx={{
+                  fontSize: "40px",
+                  position: "absolute",
+                  right: 5,
+                  top: "60%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleClear("songYear")}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="userName"
-              fullWidth
-              id="userName"
-              label="by User Name"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.userName}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("userName")}
-            />
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="songTitle"
-              fullWidth
-              id="songTitle"
-              label="by Song Title"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.songTitle}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("songTitle")}
-            />
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
-            <TextField
-              name="songArtist"
-              fullWidth
-              id="songArtist"
-              label="by Song Artist"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.songArtist}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("songArtist")}
-            />
-          </Grid>
-          <Grid item xs={10} sx={{ position: "relative" }}>
-            <TextField
-              name="songYear"
-              fullWidth
-              id="songYear"
-              label="by Song Year"
-              variant="filled"
-              onChange={handleChange}
-              value={searchData.songYear}
-              sx={{
-                bgcolor: "rgb(216, 240, 247)",
-                "& .MuiFilledInput-root": {
-                  width: "full",
-                  height: "75px",
-                },
-                "& .MuiInputLabel-root": {
-                  top: 10,
-                  color: "black",
-                  fontSize: "20px",
-                },
-              }}
-            />
-            <HighlightOffIcon
-              sx={{
-                fontSize: "40px",
-                position: "absolute",
-                right: 5,
-                top: "60%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleClear("songYear")}
-            />
-          </Grid>
-        </Grid>
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "90%",
-            display: "flex",
-            gap: 20,
-            mt: 4,
-            mb: 1,
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
+          <Box
             sx={{
-              textTransform: "none",
-              fontSize: "25px",
-              width: "30%",
-              padding: 2,
-              bgcolor: "rgba(31, 155, 192, 1)",
-              borderRadius: 5,
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "90%",
+              display: "flex",
+              gap: 20,
+              mt: 4,
+              mb: 1,
             }}
-            onClick={handleSearch}
           >
-            <SearchIcon sx={{ fontSize: 30, pr: 1 }} />
-            Search
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            sx={{
-              textTransform: "none",
-              fontSize: "25px",
-              width: "30%",
-              padding: 2,
-              bgcolor: "rgba(31, 155, 192, 1)",
-              borderRadius: 5,
-            }}
-            onClick={() => handleClear()}
-          >
-            Clear
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                textTransform: "none",
+                fontSize: "25px",
+                width: "30%",
+                padding: 2,
+                bgcolor: "rgba(31, 155, 192, 1)",
+                borderRadius: 5,
+              }}
+              onClick={handleSearch}
+            >
+              <SearchIcon sx={{ fontSize: 30, pr: 1 }} />
+              Search
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              sx={{
+                textTransform: "none",
+                fontSize: "25px",
+                width: "30%",
+                padding: 2,
+                bgcolor: "rgba(31, 155, 192, 1)",
+                borderRadius: 5,
+              }}
+              onClick={() => handleClear()}
+            >
+              Clear
+            </Button>
+          </Box>
         </Box>
       </Box>
 

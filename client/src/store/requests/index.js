@@ -11,6 +11,7 @@
 */
 
 import axios from "axios";
+
 axios.defaults.withCredentials = true;
 const api = axios.create({
   baseURL: "http://localhost:4000/store",
@@ -22,13 +23,8 @@ const api = axios.create({
 // WORK, AND SOME REQUIRE DATA, WHICH WE WE WILL FORMAT HERE, FOR WHEN
 // WE NEED TO PUT THINGS INTO THE DATABASE OR IF WE HAVE SOME
 // CUSTOM FILTERS FOR QUERIES
-export const createPlaylist = (newListName, newSongs, userEmail) => {
-  return api.post(`/playlist/`, {
-    // SPECIFY THE PAYLOAD
-    name: newListName,
-    songs: newSongs,
-    ownerEmail: userEmail,
-  });
+export const createPlaylist = (payload) => {
+  return api.post(`/playlist/`, payload);
 };
 export const deletePlaylistById = (id) => api.delete(`/playlist/${id}`);
 export const getPlaylistById = (id) => api.get(`/playlist/${id}`);
@@ -45,6 +41,18 @@ export const getPlaylistSearch = (searchCriteria) => {
   return api.get(`/playlist/search-result`, { params: searchCriteria });
 };
 
+export const getSongCatalogSearch = (searchCriteria) => {
+  return api.get(`/songs/search-result`, { params: searchCriteria });
+};
+export const removeSongFromCatalog = (id) => api.delete(`/song/${id}`);
+export const createSong = (payload) => {
+  return api.post(`/song/`, payload);
+};
+
+export const updateSong = (payload) => {
+  return api.put(`/song/${payload._id}`, payload);
+};
+
 const apis = {
   createPlaylist,
   deletePlaylistById,
@@ -53,6 +61,10 @@ const apis = {
   updatePlaylistById,
   getSongCatalog,
   getPlaylistSearch,
+  getSongCatalogSearch,
+  removeSongFromCatalog,
+  createSong,
+  updateSong,
 };
 
 export default apis;

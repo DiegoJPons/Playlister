@@ -12,8 +12,8 @@ const style1 = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "75%",
-  height: "85%",
+  width: "45%",
+  height: "60%",
   bgcolor: "#B0FFB5",
   border: "3px solid #000",
   display: "flex",
@@ -54,7 +54,7 @@ export default function MUIDeleteModal() {
           }}
         >
           <Typography sx={{ fontWeight: "1000" }} variant="h4" component="h2">
-            Delete Playlist
+            Delete Playlist?
           </Typography>
         </Box>
 
@@ -65,18 +65,18 @@ export default function MUIDeleteModal() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "60%",
+            height: "40%",
             textAlign: "center",
           }}
         >
           <Typography
-            variant="h1"
+            variant="h2"
             sx={{ color: "rgba(73, 69, 79, 1)", m: 13, textAlign: "center" }}
           >
             Are you sure you want to delete the{" "}
             <Typography
               display="inline"
-              variant="h1"
+              variant="h2"
               sx={{
                 color: "#820747CF",
                 fontWeight: "bold",
@@ -103,9 +103,8 @@ export default function MUIDeleteModal() {
             justifyContent: "center",
             alignItems: "center",
             mt: 2,
-
             mb: 2,
-            gap: 30,
+            gap: 5,
           }}
         >
           <Button
@@ -113,11 +112,11 @@ export default function MUIDeleteModal() {
               textTransform: "none",
               color: "white",
               backgroundColor: "black",
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: "bold",
               p: "5px",
               mt: "95px",
-              mr: "95px",
+              ml: "95px",
               borderRadius: 6,
               pt: 1,
               pb: 1,
@@ -136,7 +135,7 @@ export default function MUIDeleteModal() {
               textTransform: "none",
               color: "white",
               backgroundColor: "black",
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: "bold",
               p: "5px",
               mt: "95px",
