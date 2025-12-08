@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import authRequestSender from "./requests";
 
 const AuthContext = createContext();
-console.log("create AuthContext: " + AuthContext);
+// console.log("create AuthContext: " + AuthContext);
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
@@ -12,6 +12,7 @@ export const AuthActionType = {
   LOGOUT_USER: "LOGOUT_USER",
   REGISTER_USER: "REGISTER_USER",
   UPDATE_USER: "UPDATE_USER",
+  LOGIN_GUEST: "LOGIN_GUEST",
 };
 
 function AuthContextProvider(props) {
@@ -36,6 +37,7 @@ function AuthContextProvider(props) {
           errorMessage: null,
         });
       }
+      case AuthActionType.LOGIN_GUEST:
       case AuthActionType.LOGIN_USER: {
         return setAuth({
           user: payload.user,
@@ -160,6 +162,31 @@ function AuthContextProvider(props) {
     }
   };
 
+  auth.loginGuest = async function () {
+    try {
+      const response = await authRequestSender.loginGuest();
+      if (response.status === 200) {
+        authReducer({
+          type: AuthActionType.LOGIN_GUEST,
+          payload: {
+            user: response.data.user,
+            loggedIn: true,
+            errorMessage: null,
+          },
+        });
+        history.push("/");
+      }
+    } catch (error) {
+      authReducer({
+        type: AuthActionType.LOGIN_GUEST,
+        payload: {
+          user: null,
+          loggedIn: false,
+          errorMessage: error.response.data.errorMessage,
+        },
+      });
+    }
+  };
   auth.loginUser = async function (email, password) {
     try {
       const response = await authRequestSender.loginUser(email, password);
@@ -175,12 +202,15 @@ function AuthContextProvider(props) {
         history.push("/");
       }
     } catch (error) {
+      const errorMessage = error.response
+        ? error.response.data.errorMessage
+        : "Network/CORS Error: Could not connect to server.";
       authReducer({
         type: AuthActionType.LOGIN_USER,
         payload: {
           user: auth.user,
           loggedIn: false,
-          errorMessage: error.response.data.errorMessage,
+          errorMessage: errorMessage,
         },
       });
     }

@@ -23,6 +23,7 @@ getLoggedIn = async (req, res) => {
         userName: loggedInUser.userName,
         email: loggedInUser.email,
         avatar: loggedInUser.avatar,
+        isGuest: loggedInUser.isGuest,
       },
     });
   } catch (err) {
@@ -219,10 +220,52 @@ updateUser = async (req, res) => {
   }
 };
 
+loginGuest = async (req, res) => {
+  console.log("LOGIN GUEST IN BACKEND");
+  try {
+    const guestName = "Guest-" + Date.now().toString();
+    const guestEmail = "guest-" + Date.now().toString() + "@guest.com";
+
+    const guestAccount = new User({
+      userName: guestName,
+      email: guestEmail,
+      passwordHash: null,
+      avatar: "",
+      isGuest: true,
+    });
+
+    const savedGuest = await guestAccount.save();
+
+    const token = auth.signToken(savedGuest._id);
+
+    await res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .status(200)
+      .json({
+        success: true,
+        user: {
+          _id: savedGuest._id,
+          userName: savedGuest.userName,
+          email: savedGuest.email,
+          avatar: savedGuest.avatar,
+          isGuest: true,
+        },
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+};
+
 module.exports = {
   getLoggedIn,
   registerUser,
   loginUser,
   logoutUser,
   updateUser,
+  loginGuest,
 };

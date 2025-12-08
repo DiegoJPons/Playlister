@@ -72,8 +72,8 @@ export default function MUIEditPlaylistModal() {
 
   const handleCloseModal = (event) => {
     if (event) event.stopPropagation();
-    store.loadIdNamePairs();
     store.closeCurrentList();
+    store.loadIdNamePairs();
   };
 
   // DRAG AND DROP

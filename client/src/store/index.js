@@ -33,7 +33,7 @@ export const GlobalStoreActionType = {
   MARK_LIST_FOR_EDIT: "MARK_LIST_FOR_EDIT",
   SET_CURRENT_LIST: "SET_CURRENT_LIST",
   SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-  UPDATE_LIST_WHILTE_EDITINGS: "UPDATE_LIST_WHILTE_EDITINGS",
+  UPDATE_LIST_WHILE_EDITING: "UPDATE_LIST_WHILE_EDITING",
   EDIT_SONG: "EDIT_SONG",
   REMOVE_SONG_FROM_CATALOG: "REMOVE_SONG_FROM_CATALOG",
   EDIT_SONG_IN_CATALOG: "EDIT_SONG_IN_CATALOG",
@@ -100,7 +100,7 @@ function GlobalStoreContextProvider(props) {
       // LIST UPDATE OF ITS NAME
       case GlobalStoreActionType.CHANGE_LIST_NAME: {
         return setStore({
-          currentModal: CurrentModal.EDIT_LIST,
+          currentModal: store.currentModal,
           idNamePairs: payload.idNamePairs,
           currentList: payload.playlist,
           currentSongIndex: -1,
@@ -285,7 +285,7 @@ function GlobalStoreContextProvider(props) {
       }
       case GlobalStoreActionType.UPDATE_LIST_WHILE_EDITING: {
         return setStore({
-          currentModal: CurrentModal.EDIT_LIST,
+          currentModal: store.currentModal,
           idNamePairs: store.idNamePairs,
           currentList: payload,
           currentSongIndex: -1,

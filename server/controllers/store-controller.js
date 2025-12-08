@@ -1,13 +1,7 @@
 const Playlist = require("../models/playlist-model");
 const User = require("../models/user-model");
 const auth = require("../auth");
-/*
-    This is our back-end API. It provides all the data services
-    our database needs. Note that this file contains the controller
-    functions for each endpoint.
-    
-    @author McKilla Gorilla
-*/
+
 createPlaylist = (req, res) => {
   if (auth.verifyUser(req) === null) {
     return res.status(400).json({

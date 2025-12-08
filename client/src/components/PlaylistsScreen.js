@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../store/index.js";
+import AuthContext from "../auth/index.js";
 import PlaylistCard from "./PlaylistCard.js";
 import MUIDeleteModal from "./MUIDeleteModal.js";
 import MUIPlayPlaylistModal from "./MUIPlayPlaylistModal";
@@ -22,6 +23,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const PlaylistsScreen = () => {
   const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
   const [searchData, setSearchData] = useState({
     playlistName: "",
     userName: "",
@@ -29,6 +31,8 @@ const PlaylistsScreen = () => {
     songArtist: "",
     songYear: "",
   });
+
+  const isGuest = auth.user.isGuest;
   const [sortText, setSortText] = useState("Listeners (Hi-Lo)");
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -438,24 +442,26 @@ const PlaylistsScreen = () => {
         <MUIDeleteModal />
         <MUIPlayPlaylistModal />
         <MUIEditPlaylistModal />
-        <Button
-          type="button"
-          variant="contained"
-          sx={{
-            textTransform: "none",
-            fontSize: "25px",
-            position: "absolute",
-            bottom: 10,
-            right: 600,
-            padding: 2,
-            bgcolor: "rgba(31, 155, 192, 1)",
-            borderRadius: 5,
-          }}
-          onClick={handleCreateNewList}
-        >
-          <AddCircleOutlineIcon sx={{ fontSize: 30, pr: 1 }} />
-          New Playlist
-        </Button>
+        {!isGuest && (
+          <Button
+            type="button"
+            variant="contained"
+            sx={{
+              textTransform: "none",
+              fontSize: "25px",
+              position: "absolute",
+              bottom: 10,
+              right: 600,
+              padding: 2,
+              bgcolor: "rgba(31, 155, 192, 1)",
+              borderRadius: 5,
+            }}
+            onClick={handleCreateNewList}
+          >
+            <AddCircleOutlineIcon sx={{ fontSize: 30, pr: 1 }} />
+            New Playlist
+          </Button>
+        )}
       </Box>
     </Box>
   );

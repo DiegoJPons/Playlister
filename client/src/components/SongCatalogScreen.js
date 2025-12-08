@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../store/index.js";
+import AuthContext from "../auth/index.js";
 import SongCard from "./SongCard.js";
 import MUIRemoveSongModal from "./MUIRemoveSongModal.js";
 import MUIEditSongModal from "./MUIEditSongModal.js";
@@ -23,11 +24,15 @@ import YouTubePlayer from "./YoutubePlayer.js";
 
 const SongCatalogScreen = () => {
   const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
   const [searchData, setSearchData] = useState({
     title: "",
     artist: "",
     year: "",
   });
+
+  const isGuest = auth.user?.isGuest;
+
   const [sortText, setSortText] = useState("Listens (Hi-Lo)");
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -381,23 +386,25 @@ const SongCatalogScreen = () => {
           {songCard}
         </Box>
 
-        <Button
-          type="button"
-          variant="contained"
-          sx={{
-            fontSize: "20px",
-            position: "absolute",
-            bottom: 42,
-            right: 620,
-            padding: 3,
-            bgcolor: "rgba(31, 155, 192, 1)",
-            borderRadius: 5,
-          }}
-          onClick={handleCreateNewSong}
-        >
-          <AddCircleOutlineIcon sx={{ pr: 1 }} />
-          New Song
-        </Button>
+        {!isGuest && (
+          <Button
+            type="button"
+            variant="contained"
+            sx={{
+              fontSize: "20px",
+              position: "absolute",
+              bottom: 42,
+              right: 620,
+              padding: 3,
+              bgcolor: "rgba(31, 155, 192, 1)",
+              borderRadius: 5,
+            }}
+            onClick={handleCreateNewSong}
+          >
+            <AddCircleOutlineIcon sx={{ pr: 1 }} />
+            New Song
+          </Button>
+        )}
       </Box>
       <MUIRemoveSongModal />
       <MUIEditSongModal />

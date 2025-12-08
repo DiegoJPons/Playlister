@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../auth";
 import { GlobalStoreContext } from "../store";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import Avatar from "@mui/material/Avatar";
 import AppBar from "@mui/material/AppBar";
@@ -22,6 +23,8 @@ export default function AppBanner() {
   const isMenuOpen = Boolean(anchorEl);
   const location = useLocation();
 
+  const history = useHistory();
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -37,6 +40,11 @@ export default function AppBanner() {
 
   const handleHouseClick = () => {
     store.closeCurrentList();
+  };
+
+  const handleLogin = () => {
+    handleMenuClose();
+    history.push("/login");
   };
 
   const menuId = "primary-search-account-menu";
@@ -115,14 +123,14 @@ export default function AppBanner() {
       onClose={handleMenuClose}
     >
       <MenuItem
-        onClick={handleLogout}
+        onClick={auth.user?.isGuest ? handleLogin : handleLogout}
         sx={{
           "&:hover": {
             bgcolor: "rgb(216, 240, 247)",
           },
         }}
       >
-        Logout
+        {auth.user?.isGuest ? "Login" : "Logout"}
       </MenuItem>
       <MenuItem
         onClick={handleMenuClose}
@@ -133,7 +141,7 @@ export default function AppBanner() {
         }}
       >
         <Link
-          to="/edit-account/"
+          to={auth.user?.isGuest ? "/register" : "/edit-account/"}
           style={{
             textDecoration: "none",
             color: "inherit",
@@ -141,7 +149,7 @@ export default function AppBanner() {
             width: "100%",
           }}
         >
-          Edit Account
+          {auth.user?.isGuest ? "Create Account" : "Eddit Account"}
         </Link>
       </MenuItem>
     </Menu>
@@ -149,6 +157,7 @@ export default function AppBanner() {
 
   let centerContent = "";
   let menu = loggedOutMenu;
+
   if (auth.loggedIn) {
     menu = loggedInMenu;
     if (location.pathname === "/" || location.pathname === "/song-catalog/") {
@@ -233,11 +242,11 @@ export default function AppBanner() {
         <Avatar
           src={auth.user.avatar}
           sx={{
-            bgcolor: "white", // Background color of the avatar
-            color: "#3A64C4", // Text color of the initials
-            fontSize: 32, // Size of the initials
-            width: 60, // Width of the circle
-            height: 60, // Height of the circle
+            bgcolor: "white",
+            color: "#3A64C4",
+            fontSize: 32,
+            width: 60,
+            height: 60,
             fontWeight: "bold",
           }}
         />
@@ -256,8 +265,8 @@ export default function AppBanner() {
             sx={{ height: "90px", display: { xs: "none", sm: "block" } }}
           >
             <Link
-              to="/"
-              onClick={handleHouseClick}
+              to={"/"}
+              onClick={auth.user?.isGuest ? handleLogout : handleHouseClick}
               style={{ textDecoration: "none" }}
             >
               <IconButton

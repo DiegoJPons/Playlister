@@ -19,7 +19,8 @@ function SongCard(props) {
   const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
   const isSubMenuOpen = Boolean(subMenuAnchorEl);
 
-  const isOwner = auth.user._id === song.ownerId;
+  const isOwner = auth.user?._id === song.ownerId;
+  const isGuest = auth.user?.isGuest;
 
   // Get lists with last opened playlist first
   const originalPlaylists = store.idNamePairs || [];
@@ -123,9 +124,11 @@ function SongCard(props) {
           {song.title} by {song.artist} ({song.year})
         </Typography>
 
-        <IconButton size="small" onClick={handleMenuOpen} sx={{ p: 0 }}>
-          <MoreVertIcon />
-        </IconButton>
+        {!isGuest && (
+          <IconButton size="small" onClick={handleMenuOpen} sx={{ p: 0 }}>
+            <MoreVertIcon />
+          </IconButton>
+        )}
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>

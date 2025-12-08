@@ -8,7 +8,7 @@ export default function WelcomeScreen() {
   const { auth } = useContext(AuthContext);
   const history = useHistory();
 
-  const handleGuest = () => auth.guestLogin();
+  const handleGuest = () => auth.loginGuest();
   const handleLogin = () => history.push("/login");
   const handleRegister = () => history.push("/register");
 

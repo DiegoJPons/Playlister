@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GlobalStoreContext } from "../store";
 import AuthContext from "../auth";
 import Box from "@mui/material/Box";
@@ -18,8 +18,21 @@ function PlaylistCard(props) {
   const [text, setText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { idNamePair } = props;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUser() {
+      await auth.getLoggedIn();
+      setLoading(false);
+    }
+    loadUser();
+  }, []);
+  if (auth.loading) {
+    return null;
+  }
 
   const isOwner = auth.user._id === idNamePair.ownerId;
+  const isGuest = auth.user.isGuest;
 
   const handleToggleExpand = (event) => {
     event.stopPropagation();
@@ -147,7 +160,7 @@ function PlaylistCard(props) {
             },
           }}
         >
-          {isOwner && (
+          {auth.loggedIn && auth.user && isOwner && !isGuest && (
             <>
               <Button
                 onClick={(event) => {
@@ -184,23 +197,25 @@ function PlaylistCard(props) {
               </Button>
             </>
           )}
-          <Button
-            onClick={(event) => {
-              event.stopPropagation();
-              handleToggleEdit(event);
-            }}
-            aria-label="copy"
-            sx={{
-              padding: 3,
-              textTransform: "none",
-              bgcolor: "#077836",
-              color: "white",
-              borderRadius: 3,
-              "&:hover": { bgcolor: "#064c23ff" },
-            }}
-          >
-            Copy
-          </Button>
+          {!isGuest && (
+            <Button
+              onClick={(event) => {
+                event.stopPropagation();
+                handleToggleEdit(event);
+              }}
+              aria-label="copy"
+              sx={{
+                padding: 3,
+                textTransform: "none",
+                bgcolor: "#077836",
+                color: "white",
+                borderRadius: 3,
+                "&:hover": { bgcolor: "#064c23ff" },
+              }}
+            >
+              Copy
+            </Button>
+          )}
           <Button
             onClick={(event) => {
               event.stopPropagation();
