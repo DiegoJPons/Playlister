@@ -92,7 +92,7 @@ export default function EditAccountScreen() {
       return false;
     }
 
-    if (passwordInput === "") {
+    if (passwordInput === "" || passwordConfirmInput === "") {
       return false;
     }
     if (passwordChanged) {

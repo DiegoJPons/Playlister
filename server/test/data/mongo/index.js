@@ -74,7 +74,6 @@ async function resetMongo() {
 
   const songsToInsert = Array.from(uniqueSongsMap.values());
   const insertedSongs = await Song.insertMany(songsToInsert);
-  await Song.insertMany(songsToInsert);
   console.log("Song filled");
 
   const songIdMap = new Map();

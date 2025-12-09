@@ -94,6 +94,7 @@ function AuthContextProvider(props) {
             errorMessage: null,
           },
         });
+        return true;
       }
     } catch (error) {
       authReducer({

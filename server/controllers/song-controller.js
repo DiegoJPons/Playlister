@@ -211,6 +211,8 @@ async function addSongToPlaylist(req, res) {
   const { id } = req.params;
   const { song } = req.body;
 
+  console.log("\n\n\n\nsong: ", JSON.stringify(song) + "\n\n\n\n");
+
   if (!song) {
     return res.status(400).json({
       success: false,

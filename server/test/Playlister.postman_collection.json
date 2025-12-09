@@ -1,0 +1,562 @@
+{
+	"info": {
+		"_postman_id": "5a53c3f7-6fc1-40e4-a0fe-8867695a40f2",
+		"name": "Playlister",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49019652",
+		"_collection_link": "https://diegojean1995-302818.postman.co/workspace/Diego-Pons's-Workspace~72b7ad95-7f15-4e05-8813-414b6ea6b690/collection/49019652-5a53c3f7-6fc1-40e4-a0fe-8867695a40f2?action=share&source=collection_link&creator=49019652"
+	},
+	"item": [
+		{
+			"name": "Auth Requests",
+			"item": [
+				{
+					"name": "loginUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Andy@Tran.com\",\r\n    \"password\": \"aaaaaaaa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/auth/login/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLoggedIn",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/auth/loggedIn/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"loggedIn",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logoutUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/auth/logout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registerUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"NewUser\",\r\n    \"email\": \"New@User.com\",\r\n    \"password\": \"aaaaaaaa\",\r\n     \"passwordVerify\": \"aaaaaaaa\",\r\n     \"avatarUrl\": \"https://gravatar.com/avatar/37793bf2bfd140f0c132c6ab849ab4cb?s=400&d=robohash&r=x\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/auth/register/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"changeNewUserName\",\r\n    \"email\": \"New@User.com\",\r\n    \"password\": \"aaaaaaaa\",\r\n     \"passwordVerify\": \"aaaaaaaa\",\r\n     \"avatarUrl\": \"https://gravatar.com/avatar/37793bf2bfd140f0c132c6ab849ab4cb?s=400&d=robohash&r=x\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/auth/updateUser/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"updateUser",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginGuest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/auth/guestLogin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"guestLogin",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Store Requests",
+			"item": [
+				{
+					"name": "createPlaylist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TestList\",\r\n    \"songs\": [\r\n        {\r\n            \"songId\": \"60c042d3e4d9c8001c8b4567\",\r\n            \"title\": \"Song Title One\",\r\n            \"artist\": \"Artist Name\",\r\n            \"year\": 2000,\r\n            \"youTubeId\": \"dQw4w9WgXcQ\"\r\n        },\r\n        {\r\n            \"songId\": \"60c042d3e4d9c8001c8b4568\",\r\n            \"title\": \"Song Title Two\",\r\n            \"artist\": \"Another Artist\",\r\n            \"year\": 2000,\r\n            \"youTubeId\": \"dQw4w9WgXcQ\"\r\n        },\r\n        {\r\n            \"songId\": \"60c042d3e4d9c8001c8b4569\",\r\n            \"title\": \"Third Song\",\r\n            \"artist\": \"The Band\",\r\n            \"year\": 2000,\r\n            \"youTubeId\": \"dQw4w9WgXcQ\"\r\n        }\r\n    ],\r\n    \"ownerEmail\": \"Andy@Tran.com\",\r\n     \"userName\": \"AndyTran\",\r\n     \"listenersCount\": 0\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlaylistById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69377aaf04b15912182fda9a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69377aaf04b15912182fda9a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlaylistById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69377aaf04b15912182fda9a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69377aaf04b15912182fda9a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlaylistPairs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlistpairs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlistpairs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePlaylistById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"playlist\": {\r\n        \"name\": \"Test Update\",\r\n        \"songs\": [\r\n            {\r\n                \"songId\": \"60c042d3e4d9c8001c8b4567\",\r\n                \"title\": \"Song Title One\",\r\n                \"artist\": \"Artist Name\",\r\n                \"year\": 2000,\r\n                \"youTubeId\": \"dQw4w9WgXcQ\"\r\n            }\r\n        ],\r\n        \"ownerEmail\": \"Andy@Tran.com\",\r\n        \"userName\": \"AndyTran\",\r\n        \"listenersCount\": 5 \r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69377aaf04b15912182fdaaf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69377aaf04b15912182fdaaf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "copyPlaylist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69377aaf04b15912182fdaaf/copy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69377aaf04b15912182fdaaf",
+								"copy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSongCatalog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/songs/catalog",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"songs",
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlaylistSearch",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/search-result?songArtist=michael&songTitle=billie",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"search-result"
+							],
+							"query": [
+								{
+									"key": "songArtist",
+									"value": "michael"
+								},
+								{
+									"key": "songTitle",
+									"value": "billie"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSongCatalogSearch",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/songs/search-result?artist=weekend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"songs",
+								"search-result"
+							],
+							"query": [
+								{
+									"key": "artist",
+									"value": "weekend"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeSongFromCatalog",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/store/song/69378627072eec771c6a1897",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"song",
+								"69378627072eec771c6a1897"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateSong",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"69378627072eec771c6a2338\", \r\n    \"title\": \"a\",\r\n    \"artist\": \"Rick Astley\",\r\n    \"year\": 1234,\r\n    \"youTubeId\": \"dQw4w9WgXcQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/store/song/69378627072eec771c6a2338",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"song",
+								"69378627072eec771c6a2338"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addSongToPlaylist",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"song\": {\r\n        \"songId\": \"69378627072eec771c6a12df\",\r\n        \"title\": \"Here Comes The Sun\",\r\n        \"artist\": \"The Beatles\",\r\n        \"year\": 1969,\r\n        \"youTubeId\": \"GKdl-GCsNJ0\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69378628072eec771c6a24ce/song/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69378628072eec771c6a24ce",
+								"song",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incrementListenersCount",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/playlist/69378628072eec771c6a24ce/listeners",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"playlist",
+								"69378628072eec771c6a24ce",
+								"listeners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incrementListens",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/store/song/69378627072eec771c6a1897/listens",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"store",
+								"song",
+								"69378627072eec771c6a1897",
+								"listens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"value": ""
+		}
+	]
+}

@@ -24,7 +24,6 @@ getLoggedIn = async (req, res) => {
         email: loggedInUser.email,
         avatar: loggedInUser.avatar,
         isGuest: loggedInUser.isGuest,
-        playlists: loggedInUser.playlists,
       },
     });
   } catch (err) {
