@@ -59,8 +59,16 @@ const PlaylistsScreen = () => {
   }
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    store.searchPlaylists(searchData);
+    if (e) {
+      e.preventDefault();
+    }
+
+    const allFieldsEmpty = Object.values(searchData).every(
+      (value) => value === ""
+    );
+    if (!allFieldsEmpty) {
+      store.searchPlaylists(searchData);
+    }
   };
 
   const handleClear = (field) => {
@@ -126,7 +134,7 @@ const PlaylistsScreen = () => {
         sx={{
           width: "50%",
           pr: 3,
-          pt: 4,
+          pt: 2,
           position: "relative",
         }}
       >
@@ -137,7 +145,7 @@ const PlaylistsScreen = () => {
           Playlists
         </Typography>
         <Box component="form" onSubmit={handleSearch} sx={{ width: "100%" }}>
-          <Grid container spacing={4} sx={{ mt: 5 }}>
+          <Grid container spacing={4} sx={{ mt: 2 }}>
             <Grid item xs={10} sx={{ position: "relative", mb: 3 }}>
               <TextField
                 name="playlistName"
@@ -440,7 +448,7 @@ const PlaylistsScreen = () => {
           {listCard}
         </Box>
         <MUIDeleteModal />
-        <MUIPlayPlaylistModal />
+        <MUIPlayPlaylistModal reloadView={handleSearch} />
         <MUIEditPlaylistModal />
         {!isGuest && (
           <Button

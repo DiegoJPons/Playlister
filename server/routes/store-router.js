@@ -14,11 +14,22 @@ router.get(
 router.get("/playlist/:id", auth.verify, StoreController.getPlaylistById);
 router.get("/playlistpairs", auth.verify, StoreController.getPlaylistPairs);
 router.put("/playlist/:id", auth.verify, StoreController.updatePlaylist);
+router.post("/playlist/:id/copy", auth.verify, StoreController.copyPlaylist);
+router.put(
+  "/playlist/:id/listeners",
+  auth.verify,
+  StoreController.incrementListenersCount
+);
 // Songs
 router.get(
   "/songs/search-result",
   auth.verify,
   SongController.getSongCatalogSearch
+);
+router.put(
+  "/song/:id/listens",
+  auth.verify,
+  SongController.incrementListensCount
 );
 router.get("/songs/catalog", auth.verify, SongController.getSongCatalog);
 router.delete("/song/:id", auth.verify, SongController.removeSongFromCatalog);

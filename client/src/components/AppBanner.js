@@ -149,7 +149,7 @@ export default function AppBanner() {
             width: "100%",
           }}
         >
-          {auth.user?.isGuest ? "Create Account" : "Eddit Account"}
+          {auth.user?.isGuest ? "Create Account" : "Edit Account"}
         </Link>
       </MenuItem>
     </Menu>

@@ -1,11 +1,9 @@
 import { useContext } from "react";
 import GlobalStoreContext from "../store";
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 
 const style1 = {
   position: "absolute",

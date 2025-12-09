@@ -110,6 +110,67 @@ getPlaylistById = async (req, res) => {
     asyncFindUser(list);
   }).catch((err) => console.log(err));
 };
+
+copyPlaylist = async (req, res) => {
+  if (auth.verifyUser(req) === null) {
+    return res.status(400).json({
+      errorMessage: "UNAUTHORIZED",
+    });
+  }
+  console.log("copyPlaylist");
+  const { id } = req.params;
+
+  try {
+    const playlist = await Playlist.findById(id);
+    const user = await User.findOne({ _id: req.userId });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: "user not found." });
+    }
+
+    if (!playlist) {
+      return res
+        .status(404)
+        .json({ success: false, error: "playlist not found." });
+    }
+
+    const originalData = playlist.toObject();
+    delete originalData._id;
+
+    const newPlaylist = new Playlist(originalData);
+    newPlaylist.name = playlist.name + "(Copy)";
+    newPlaylist.ownerEmail = user.email;
+    newPlaylist.userName = user.userName;
+    newPlaylist.listenersCount = 0;
+    await newPlaylist.save();
+
+    return res.status(200).json({ success: true, playlist: newPlaylist });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Couldnt copy playlist" });
+  }
+};
+incrementListenersCount = (req, res) => {
+  if (auth.verifyUser(req) === null) {
+    return res.status(400).json({
+      errorMessage: "UNAUTHORIZED",
+    });
+  }
+  console.log("incrementListenersCount");
+
+  Playlist.findOneAndUpdate(
+    { _id: req.params.id },
+    { $inc: { listenersCount: 1 } },
+    (err, list) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      return res.status(200).json({ success: true, playlist: list });
+    }
+  );
+};
 getPlaylistPairs = async (req, res) => {
   if (auth.verifyUser(req) === null) {
     return res.status(400).json({
@@ -313,4 +374,6 @@ module.exports = {
   getPlaylistPairs,
   getPlaylistSearch,
   updatePlaylist,
+  copyPlaylist,
+  incrementListenersCount,
 };

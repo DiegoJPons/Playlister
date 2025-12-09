@@ -8,7 +8,6 @@ import {
   HomeWrapper,
   LoginScreen,
   CreateAccountScreen,
-  WorkspaceScreen,
   EditAccountScreen,
   SongCatalogScreen,
 } from "./components";
@@ -24,7 +23,6 @@ const App = () => {
             <Route path="/login/" exact component={LoginScreen} />
             <Route path="/register/" exact component={CreateAccountScreen} />
             <Route path="/edit-account/" exact component={EditAccountScreen} />
-            <Route path="/playlist/:id" exact component={WorkspaceScreen} />
             <Route path="/song-catalog/" exact component={SongCatalogScreen} />
           </Switch>
         </GlobalStoreContextProvider>

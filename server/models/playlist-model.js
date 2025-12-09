@@ -11,6 +11,7 @@ const playlistSchema = new Schema(
     songs: {
       type: [
         {
+          songId: { type: Schema.Types.ObjectId, ref: "Song", required: true },
           title: String,
           artist: String,
           year: Number,

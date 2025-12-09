@@ -73,7 +73,15 @@ function SongCard(props) {
     event.stopPropagation();
     handleSubMenuClose();
     handleMenuClose(null);
-    store.addSongToPlaylist(playlistId, song);
+
+    const songWithId = {
+      songId: song._id,
+      title: song.title,
+      artist: song.artist,
+      year: song.year,
+      youTubeId: song.youTubeId,
+    };
+    store.addSongToPlaylist(playlistId, songWithId);
   };
 
   const handleMenuClose = (event) => {
@@ -88,7 +96,9 @@ function SongCard(props) {
   }
   const style1 = {
     bgcolor: "rgba(255, 247, 178, 1)",
-    border: "3px solid rgb(255, 102, 102)",
+    border: isOwner
+      ? "3px solid rgb(255, 102, 102)"
+      : "2px solid rgba(131, 131, 131, 1)",
     borderRadius: "10px",
     padding: "15px 20px 10px 20px",
     marginBottom: "12px",

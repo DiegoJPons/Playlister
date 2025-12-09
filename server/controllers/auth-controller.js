@@ -24,6 +24,7 @@ getLoggedIn = async (req, res) => {
         email: loggedInUser.email,
         avatar: loggedInUser.avatar,
         isGuest: loggedInUser.isGuest,
+        playlists: loggedInUser.playlists,
       },
     });
   } catch (err) {
@@ -113,7 +114,7 @@ registerUser = async (req, res) => {
         " " +
         passwordVerify
     );
-    if (!userName || !email || !password || !passwordVerify) {
+    if (!userName || !email || !password || !passwordVerify || !avatarUrl) {
       return res
         .status(400)
         .json({ errorMessage: "Please enter all required fields." });
@@ -145,7 +146,12 @@ registerUser = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, salt);
     console.log("passwordHash: " + passwordHash);
 
-    const newUser = new User({ userName, email, passwordHash, avatarUrl });
+    const newUser = new User({
+      userName,
+      email,
+      passwordHash,
+      avatar: avatarUrl,
+    });
     const savedUser = await newUser.save();
     console.log("new user saved: " + savedUser._id);
 
@@ -197,9 +203,22 @@ updateUser = async (req, res) => {
     user.userName = userName;
     user.avatar = avatarUrl || "";
 
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    user.passwordHash = await bcrypt.hash(password, salt);
+    if (password || passwordVerify) {
+      if (password.length < 8) {
+        return res.status(400).json({
+          errorMessage: "Please enter a password of at least 8 characters.",
+        });
+      }
+      if (password !== passwordVerify) {
+        return res.status(400).json({
+          errorMessage: "Please enter the same password twice.",
+        });
+      }
+
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      user.passwordHash = await bcrypt.hash(password, salt);
+    }
 
     const updatedUser = await user.save();
 

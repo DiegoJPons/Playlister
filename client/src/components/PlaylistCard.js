@@ -71,10 +71,18 @@ function PlaylistCard(props) {
   }
   function handlePlayPlaylist(event, id) {
     event.stopPropagation();
+    if (!isOwner && !isGuest) {
+      store.incrementListenersCount(id);
+    }
     store.markListForPlay(id);
   }
   function handleUpdateText(event) {
     setText(event.target.value);
+  }
+
+  function handleCopyPlayList(event, id) {
+    event.stopPropagation();
+    store.copyPlaylist(id);
   }
 
   const SongListComponent = (
@@ -201,7 +209,7 @@ function PlaylistCard(props) {
             <Button
               onClick={(event) => {
                 event.stopPropagation();
-                handleToggleEdit(event);
+                handleCopyPlayList(event, idNamePair._id);
               }}
               aria-label="copy"
               sx={{

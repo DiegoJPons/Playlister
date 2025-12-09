@@ -28,7 +28,8 @@ const style1 = {
 
 const YOUTUBE_PLACEHOLDER_ID = "dQw4w9WgXcQ";
 
-export default function MUIPlayPlaylistModal() {
+export default function MUIPlayPlaylistModal(props) {
+  const { reloadView } = props;
   const { store } = useContext(GlobalStoreContext);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -46,6 +47,7 @@ export default function MUIPlayPlaylistModal() {
     store.listIdMarkedForPlay = null;
     setCurrentSongId(null);
     store.hideModals();
+    reloadView();
   }
 
   // For YouTube Player
@@ -72,13 +74,20 @@ export default function MUIPlayPlaylistModal() {
     [store.listMarkedForPlay?.songs]
   );
 
-  const handlePlayerStatusChange = useCallback((playerStatus) => {
-    if (playerStatus === 1) {
-      setIsPlaying(true);
-    } else if (playerStatus === 2) {
-      setIsPlaying(false);
-    }
-  }, []);
+  const handlePlayerStatusChange = useCallback(
+    (playerStatus) => {
+      if (playerStatus === 1) {
+        setIsPlaying(true);
+
+        if (currentSongId) {
+          store.incrementListensCount(currentSong.songId);
+        }
+      } else if (playerStatus === 2) {
+        setIsPlaying(false);
+      }
+    },
+    [currentSongId, store]
+  );
 
   const currentSong = store.listMarkedForPlay?.songs.find(
     (song) => song._id === currentSongId
@@ -237,7 +246,7 @@ export default function MUIPlayPlaylistModal() {
                 overflowY: "scroll",
                 pb: 2,
                 mt: 1,
-                height: "90%",
+                height: "88%",
               }}
             >
               {store.listMarkedForPlay?.songs.length > 0 ? (

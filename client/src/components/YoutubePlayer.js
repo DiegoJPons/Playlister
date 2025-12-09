@@ -137,7 +137,7 @@ export default function YouTubePlayer({
       currentPlaylist = [];
       currentIndex = 0;
     };
-  }, [youtubeId]); // 💡 CHANGE 3: Add youtubeId to dependencies
+  }, [youtubeId]);
 
   useEffect(() => {
     if (player && player.loadVideoById && youtubeId) {

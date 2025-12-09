@@ -253,7 +253,7 @@ const SongCatalogScreen = () => {
               display: "flex",
               gap: 20,
               mt: 4,
-              mb: 5,
+              mb: 1,
             }}
           >
             <Button

@@ -43,17 +43,18 @@ export default function EditAccountScreen() {
   const handleCancel = () => {
     history.goBack();
   };
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    auth
-      .updateUser(
-        formData.userName,
-        formData.password,
-        formData.passwordConfirm,
-        formData.avatarUrl
-      )
-      .then(() => history.goBack())
-      .catch((error) => console.error(error));
+    const success = await auth.updateUser(
+      formData.userName,
+      formData.password,
+      formData.passwordConfirm,
+      formData.avatarUrl
+    );
+
+    if (success) {
+      history.goBack();
+    }
   };
 
   const handleChange = (event) => {
@@ -81,21 +82,21 @@ export default function EditAccountScreen() {
     }
 
     const usernameChanged = formData.userName !== auth.user.userName;
-    const passwordsPresent = formData.password.trim() !== "";
-
-    if (!usernameChanged && !passwordsPresent) {
-      return false;
-    }
+    const avatarChanged = formData.avatarUrl !== auth.user.avatar;
 
     const passwordInput = formData.password.trim();
     const passwordConfirmInput = formData.passwordConfirm.trim();
     const passwordChanged = passwordInput !== "" || passwordConfirmInput !== "";
 
+    if (!usernameChanged && !avatarChanged && !passwordChanged) {
+      return false;
+    }
+
+    if (passwordInput === "") {
+      return false;
+    }
     if (passwordChanged) {
       if (passwordInput === "" || passwordConfirmInput === "") {
-        return false;
-      }
-      if (passwordInput !== passwordConfirmInput) {
         return false;
       }
     }

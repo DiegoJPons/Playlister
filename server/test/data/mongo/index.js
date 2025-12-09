@@ -73,14 +73,28 @@ async function resetMongo() {
   });
 
   const songsToInsert = Array.from(uniqueSongsMap.values());
+  const insertedSongs = await Song.insertMany(songsToInsert);
   await Song.insertMany(songsToInsert);
   console.log("Song filled");
+
+  const songIdMap = new Map();
+  insertedSongs.forEach((song) => {
+    const year = song.year ? String(song.year) : "";
+    const combined = `${song.title}${song.artist}${year}`;
+    songIdMap.set(combined, song._id);
+  });
 
   const strcturedLists = testData.playlists.map((playlist) => {
     const songsArray = playlist.songs
       .filter((song) => song && song.title && song.artist)
       .map((songData) => {
+        const title = songData.title;
+        const artist = songData.artist;
+        const year = songData.year ? String(songData.year) : "";
+        const combined = `${title}${artist}${year}`;
+        const actualSongId = songIdMap.get(combined);
         return {
+          songId: actualSongId,
           title: songData.title,
           artist: songData.artist,
           year: songData.year,

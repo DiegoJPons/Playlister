@@ -47,8 +47,12 @@ async function removeSongFromCatalog(req, res) {
     }
 
     await Playlist.updateMany(
-      { "songs.songId": id },
-      { $pull: { songs: { songId: id } } }
+      {},
+      {
+        $pull: {
+          songs: { songId: id },
+        },
+      }
     );
     return res.status(200).json({
       success: true,
@@ -114,6 +118,7 @@ async function updateSong(req, res) {
   try {
     const songToUpdate = await Song.findOne({ _id: id, ownerId: req.userId });
 
+    console.log("songToUpdate: ", JSON.stringify(songToUpdate) + "\n\n");
     if (!songToUpdate) {
       return res.status(404).json({
         success: false,
@@ -126,6 +131,18 @@ async function updateSong(req, res) {
     songToUpdate.youTubeId = body.youTubeId || songToUpdate.youTubeId;
 
     await songToUpdate.save();
+
+    await Playlist.updateMany(
+      { "songs.songId": songToUpdate._id },
+      {
+        $set: {
+          "songs.$.title": songToUpdate.title,
+          "songs.$.artist": songToUpdate.artist,
+          "songs.$.year": songToUpdate.year,
+          "songs.$.youTubeId": songToUpdate.youTubeId,
+        },
+      }
+    );
 
     return res.status(200).json({
       success: true,
@@ -226,6 +243,27 @@ async function addSongToPlaylist(req, res) {
   }
 }
 
+async function incrementListensCount(req, res) {
+  if (auth.verifyUser(req) === null) {
+    return res.status(400).json({
+      errorMessage: "UNAUTHORIZED",
+    });
+  }
+  console.log("Incrementing listens count for song:", req.params.id);
+  Song.findOneAndUpdate(
+    { _id: req.params.id },
+    { $inc: { listensCount: 1 } },
+    (err, changedSong) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+
+      console.log("Updated song: ", changedSong);
+      return res.status(200).json({ success: true, song: changedSong });
+    }
+  );
+}
+
 module.exports = {
   getSongCatalog,
   getSongCatalogSearch,
@@ -233,4 +271,5 @@ module.exports = {
   createSong,
   updateSong,
   addSongToPlaylist,
+  incrementListensCount,
 };

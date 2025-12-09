@@ -26,17 +26,17 @@ export default function CreateAccountScreen() {
     email: "",
     password: "",
     passwordConfirm: "",
+    avatarUrl: "",
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
     auth.registerUser(
-      formData.get("userName"),
-      formData.get("email"),
-      formData.get("password"),
-      formData.get("passwordConfirm"),
-      formData.get("avatarUrl")
+      formData.userName,
+      formData.email,
+      formData.password,
+      formData.passwordConfirm,
+      formData.avatarUrl
     );
   };
 

@@ -8,21 +8,10 @@ import RemoveSong_Transaction from "../transactions/RemoveSong_Transaction";
 import UpdateSong_Transaction from "../transactions/UpdateSong_Transaction";
 import DuplicateSong_Transaction from "../transactions/DuplicateSong_Transaction";
 import AuthContext from "../auth";
-import { avatarClasses } from "@mui/material";
 
-/*
-    This is our global data store. Note that it uses the Flux design pattern,
-    which makes use of things like actions and reducers. 
-    
-    @author McKilla Gorilla
-*/
-
-// THIS IS THE CONTEXT WE'LL USE TO SHARE OUR STORE
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
 
-// THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
-// DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
   CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
   CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
@@ -45,7 +34,6 @@ export const GlobalStoreActionType = {
   LOAD_SONG_SEARCH: "LOAD_SONG_SEARCH",
 };
 
-// WE'LL NEED THIS TO PROCESS TRANSACTIONS
 const tps = new jsTPS();
 
 const CurrentModal = {
@@ -59,10 +47,7 @@ const CurrentModal = {
   ERROR: "ERROR",
 };
 
-// WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
-// AVAILABLE TO THE REST OF THE APPLICATION
 function GlobalStoreContextProvider(props) {
-  // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
   const [store, setStore] = useState({
     currentModal: CurrentModal.NONE,
     idNamePairs: [],
@@ -481,6 +466,57 @@ function GlobalStoreContextProvider(props) {
     }
     asyncAddSongToPlaylist(id, song);
   };
+
+  store.copyPlaylist = function (id) {
+    async function asyncCopyPlaylist(id) {
+      let response = await storeRequestSender.copyPlaylist(id);
+      if (response.data.success) {
+        store.loadIdNamePairs();
+      } else {
+        console.log("FAILED TO COPY PLAYLIST");
+      }
+    }
+    asyncCopyPlaylist(id);
+  };
+
+  store.incrementListenersCount = function (id) {
+    async function asyncIncrementListenersCount(id) {
+      let response = await storeRequestSender.incrementListenersCount(id);
+      if (response.data.success) {
+        console.log("SUCCESSFULLY INCREMENTED LISTENERS COUNT");
+      } else {
+        console.log("FAILED TO INCREMENT LISTENERS COUNT");
+      }
+    }
+    asyncIncrementListenersCount(id);
+  };
+
+  store.refreshPlaylist = async function (id) {
+    const response = await storeRequestSender.getPlaylistById(id);
+    if (response.data.success) {
+      const playlist = response.data.playlist;
+
+      const updatedPairs = store.idNamePairs.map((pair) =>
+        pair._id === id ? playlist : pair
+      );
+
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+        payload: updatedPairs,
+      });
+    }
+  };
+  store.incrementListensCount = function (id) {
+    async function asyncIncrementListensCount(id) {
+      let response = await storeRequestSender.incrementListensCount(id);
+      if (response.data.success) {
+        console.log("SUCCESSFULLY INCREMENTED LISTENS COUNT");
+      } else {
+        console.log("FAILED TO INCREMENT LISTENS COUNT");
+      }
+    }
+    asyncIncrementListensCount(id);
+  };
   store.updateSong = function (songData) {
     async function asyncUpdateSong(songData) {
       const song = { ...songData, _id: store.songToEdit._id };
@@ -774,7 +810,6 @@ function GlobalStoreContextProvider(props) {
     });
   };
   store.hideModals = () => {
-    console.log("\n\n\nhiding modals");
     auth.errorMessage = null;
     storeReducer({
       type: GlobalStoreActionType.HIDE_MODALS,

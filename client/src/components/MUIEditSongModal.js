@@ -36,7 +36,7 @@ export default function MUIEditSongModal() {
       setSongData({
         title: store.songToEdit.title || "",
         artist: store.songToEdit.artist || "",
-        year: store.songToEdit.year || "",
+        year: store.songToEdit.year.toString() || "",
         youTubeId: store.songToEdit.youTubeId || "",
       });
     }
@@ -44,6 +44,7 @@ export default function MUIEditSongModal() {
 
   function canComplete() {
     const { title, artist, year, youTubeId } = songData;
+    const parsedYear = parseInt(year);
     return (
       title &&
       title.trim() !== "" &&
@@ -51,6 +52,8 @@ export default function MUIEditSongModal() {
       artist.trim() !== "" &&
       year &&
       year.trim() !== "" &&
+      !isNaN(parsedYear) &&
+      parsedYear > 0 &&
       youTubeId &&
       youTubeId.trim() !== ""
     );
@@ -63,7 +66,11 @@ export default function MUIEditSongModal() {
 
   const handleComplete = (e) => {
     e.preventDefault();
-    store.updateSong(songData);
+    const songDataToUpdate = {
+      ...songData,
+      year: parseInt(songData.year),
+    };
+    store.updateSong(songDataToUpdate);
   };
 
   const handleCancel = (e) => {

@@ -5,7 +5,7 @@ const SongSchema = new Schema(
   {
     title: { type: String, required: true },
     artist: { type: String, required: true },
-    year: { type: String, required: true },
+    year: { type: Number, required: true },
     youTubeId: { type: String },
     playlistCount: { type: Number, required: true, default: 0 },
     listensCount: { type: Number, required: true, default: 0 },
