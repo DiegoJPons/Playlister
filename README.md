@@ -1,12 +1,43 @@
-### **Playlister Web Application**
+# Playlister
 
-**The Challenge:** Developing a high-fidelity media management platform that handles complex relational data and real-time state synchronization. This project focused on creating a seamless user experience for curating digital libraries, requiring the implementation of a custom Transaction Processing System (TPS) and deep integration with the YouTube Data API.
+A full-stack playlist app with an **Express** API and **MongoDB** for users, playlists, and songs. Playback uses the **YouTube** iframe API for streaming-style listening. Sign-in is **session-based** (bcrypt-hashed passwords, JWT cookies).
 
-**Technical Architecture & "The Craft":**
-* **Transaction Processing System (TPS):** Engineered a robust Undo/Redo system to manage complex user actions, including song reordering, metadata editing, and playlist modifications, ensuring data consistency across the application state.
-* **Integrated Media Playback:** Developed a custom player interface leveraging the **YouTube API**, featuring autoplay, sequential playback, and loop functionality for a native-feeling streaming experience.
-* **MERN Stack Persistence:** Built a full-stack architecture using **MongoDB, Express, React, and Node.js**, utilizing a **RESTful API** to synchronize frontend interactions with a persistent NoSQL database.
-* **Stateful UI with Material UI:** Designed a responsive, polished interface based on strict Figma specifications, using **Material UI** to manage complex layouts and provide immediate visual feedback for user interactions.
-* **Scalable Data Modeling:** Designed a normalized schema to track detailed playlist metadata, including owner permissions, play counts, and community engagement metrics (likes/dislikes).
+The client is **React** (Create React App) and **Material UI**, with playlist editing, a song catalog, YouTube-backed playback, and a **transaction processing system** (TPS) for undo/redo on playlist actions.
 
-> **Technical Decision Highlight:** "A major challenge was implementing a seamless Undo/Redo feature for song reordering. I chose to implement a Command Pattern-based Transaction Processing System. This allowed me to encapsulate every user action as a discrete object, making the application state predictable and allowing for complex 'time-travel' debugging during development. This significantly elevated the app from a simple CRUD tool to a professional-grade productivity application."
+---
+
+## Features
+
+- **Playlists** — Create, open, rename, copy, and delete playlists; persist state to the API.
+- **Player** — YouTube-driven playback with queue behavior and controls tied to the active playlist.
+- **Edit & undo** — Song add/remove/reorder and metadata edits with **undo/redo** via a custom TPS (**jstps**).
+- **Auth** — Register, login, logout, and guest login; protected routes and user-owned playlists.
+- **Catalog** — Search and browse songs from the server-backed catalog.
+- **Layout** — Polished UI with MUI components and a consistent app shell.
+
+---
+
+## Tech stack
+
+| Area | Technologies |
+|------|----------------|
+| Frontend | React 17, Create React App, Material UI, Emotion, React Router v5, Axios, jstps |
+| Backend | Node.js, Express, Mongoose, bcryptjs, jsonwebtoken, cookie-parser, CORS |
+| Data | MongoDB |
+
+---
+
+## Project structure
+
+```
+client/     React SPA
+server/     REST API
+```
+
+The API and client are separate packages; build the client for static hosting (e.g. **Vercel**) and run the API on a Node host (e.g. **Render**) with `DB_CONNECT` and CORS configured for your frontend origin.
+
+---
+
+## Note
+
+This project is for learning and portfolio use and is not affiliated with YouTube or Spotify.
