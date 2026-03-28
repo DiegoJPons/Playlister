@@ -9,11 +9,26 @@ dotenv.config()
 const PORT = process.env.PORT || 4000;
 const app = express()
 
+app.set('trust proxy', 1)
+
+const defaultOrigins = ['http://localhost:3000']
+const extraOrigins = (process.env.CLIENT_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])]
+
 // SETUP THE MIDDLEWARE
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: ["http://localhost:3000"],
-    credentials: true
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(null, false)
+    }
+  },
+  credentials: true
 }))
 app.use(express.json())
 app.use(cookieParser())

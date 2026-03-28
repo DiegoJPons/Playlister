@@ -2,6 +2,12 @@ const auth = require("../auth");
 const User = require("../models/user-model");
 const bcrypt = require("bcryptjs");
 
+const getAuthCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
+
 getLoggedIn = async (req, res) => {
   try {
     let userId = auth.verifyUser(req);
@@ -68,11 +74,7 @@ loginUser = async (req, res) => {
     console.log(token);
 
     res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-      })
+      .cookie("token", token, getAuthCookieOptions())
       .status(200)
       .json({
         success: true,
@@ -91,10 +93,8 @@ loginUser = async (req, res) => {
 logoutUser = async (req, res) => {
   res
     .cookie("token", "", {
-      httpOnly: true,
+      ...getAuthCookieOptions(),
       expires: new Date(0),
-      secure: true,
-      sameSite: "none",
     })
     .send();
 };
@@ -159,11 +159,7 @@ registerUser = async (req, res) => {
     console.log("token:" + token);
 
     await res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      })
+      .cookie("token", token, getAuthCookieOptions())
       .status(200)
       .json({
         success: true,
@@ -257,11 +253,7 @@ loginGuest = async (req, res) => {
     const token = auth.signToken(savedGuest._id);
 
     await res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      })
+      .cookie("token", token, getAuthCookieOptions())
       .status(200)
       .json({
         success: true,

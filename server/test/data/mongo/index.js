@@ -127,7 +127,7 @@ async function resetMongo() {
 }
 
 mongoose
-  .connect(process.env.DB_CONNECT, { useNewUrlParser: true })
+  .connect(process.env.DB_CONNECT)
   .then(() => {
     resetMongo();
   })

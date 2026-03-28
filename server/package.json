@@ -2,7 +2,11 @@
   "name": "playlister-server",
   "version": "4.0.0",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
+    "start": "node index.js",
     "test": "vitest"
   },
   "license": "MIT",
@@ -14,7 +18,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.5",
+    "mongoose": "^6.13.8",
     "vitest": "^3.2.4"
   }
 }

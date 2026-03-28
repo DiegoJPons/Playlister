@@ -13,11 +13,9 @@ const Playlist = require("../models/playlist-model");
 const Song = require("../models/song-model");
 
 beforeAll(async () => {
-  await mongoose
-    .connect(process.env.DB_CONNECT, { useNewUrlParser: true })
-    .catch((e) => {
-      console.error("Connection error", e.message);
-    });
+  await mongoose.connect(process.env.DB_CONNECT).catch((e) => {
+    console.error("Connection error", e.message);
+  });
 });
 
 beforeEach(() => {});
