@@ -6,6 +6,8 @@ const backendBase =
 axios.defaults.withCredentials = true;
 const api = axios.create({
   baseURL: `${backendBase.replace(/\/$/, "")}/auth`,
+  /** Render free-tier cold starts can exceed 30–60s; avoid aborting too early. */
+  timeout: 120000,
 });
 
 export const getLoggedIn = () => api.get(`/loggedIn/`);

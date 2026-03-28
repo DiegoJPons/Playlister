@@ -6,6 +6,7 @@ const backendBase =
 axios.defaults.withCredentials = true;
 const api = axios.create({
   baseURL: `${backendBase.replace(/\/$/, "")}/store`,
+  timeout: 120000,
 });
 export const createPlaylist = (payload) => {
   return api.post(`/playlist/`, payload);

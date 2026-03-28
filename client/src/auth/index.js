@@ -109,15 +109,29 @@ function AuthContextProvider(props) {
   };
 
   auth.getLoggedIn = async function () {
-    const response = await authRequestSender.getLoggedIn();
-    if (response.status === 200) {
-      authReducer({
-        type: AuthActionType.GET_LOGGED_IN,
-        payload: {
-          loggedIn: response.data.loggedIn,
-          user: response.data.user,
-        },
-      });
+    const maxAttempts = 3;
+    const waitAfterFailMs = [0, 2500, 5000];
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      if (waitAfterFailMs[attempt] > 0) {
+        await new Promise((r) => setTimeout(r, waitAfterFailMs[attempt]));
+      }
+      try {
+        const response = await authRequestSender.getLoggedIn();
+        if (response.status === 200) {
+          authReducer({
+            type: AuthActionType.GET_LOGGED_IN,
+            payload: {
+              loggedIn: response.data.loggedIn,
+              user: response.data.user,
+            },
+          });
+        }
+        return;
+      } catch (e) {
+        if (attempt === maxAttempts - 1) {
+          console.warn("getLoggedIn failed after retries", e);
+        }
+      }
     }
   };
 
