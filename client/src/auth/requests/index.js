@@ -1,7 +1,11 @@
 import axios from "axios";
+
+const backendBase =
+  process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "http://localhost:4000/auth",
+  baseURL: `${backendBase.replace(/\/$/, "")}/auth`,
 });
 
 export const getLoggedIn = () => api.get(`/loggedIn/`);

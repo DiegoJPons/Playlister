@@ -1,8 +1,11 @@
 import axios from "axios";
 
+const backendBase =
+  process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "http://localhost:4000/store",
+  baseURL: `${backendBase.replace(/\/$/, "")}/store`,
 });
 export const createPlaylist = (payload) => {
   return api.post(`/playlist/`, payload);
