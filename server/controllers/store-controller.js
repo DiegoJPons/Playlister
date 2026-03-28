@@ -48,36 +48,24 @@ deletePlaylist = async (req, res) => {
       errorMessage: "UNAUTHORIZED",
     });
   }
-  console.log("delete Playlist with id: " + JSON.stringify(req.params.id));
-  console.log("delete " + req.params.id);
-  Playlist.findById({ _id: req.params.id }, (err, playlist) => {
-    console.log("playlist found: " + JSON.stringify(playlist));
-    if (err) {
-      return res.status(404).json({
-        errorMessage: "Playlist not found!",
-      });
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).json({ errorMessage: "Playlist not found!" });
     }
-
-    // DOES THIS LIST BELONG TO THIS USER?
-    async function asyncFindUser(list) {
-      User.findOne({ email: list.ownerEmail }, (err, user) => {
-        console.log("user._id: " + user._id);
-        console.log("req.userId: " + req.userId);
-        if (user._id == req.userId) {
-          console.log("correct user!");
-          Playlist.findOneAndDelete({ _id: req.params.id }, () => {
-            return res.status(200).json({});
-          }).catch((err) => console.log(err));
-        } else {
-          console.log("incorrect user!");
-          return res.status(400).json({
-            errorMessage: "authentication error",
-          });
-        }
-      });
+    const user = await User.findOne({ email: playlist.ownerEmail });
+    if (!user) {
+      return res.status(400).json({ errorMessage: "Owner not found" });
     }
-    asyncFindUser(playlist);
-  });
+    if (String(user._id) !== String(req.userId)) {
+      return res.status(400).json({ errorMessage: "authentication error" });
+    }
+    await Playlist.findByIdAndDelete(req.params.id);
+    return res.status(200).json({});
+  } catch (err) {
+    console.error("deletePlaylist", err);
+    return res.status(500).json({ errorMessage: "Server error" });
+  }
 };
 getPlaylistById = async (req, res) => {
   if (auth.verifyUser(req) === null) {
@@ -85,30 +73,29 @@ getPlaylistById = async (req, res) => {
       errorMessage: "UNAUTHORIZED",
     });
   }
-  console.log("Find Playlist with id: " + JSON.stringify(req.params.id));
-
-  await Playlist.findById({ _id: req.params.id }, (err, list) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
+  try {
+    const list = await Playlist.findById(req.params.id);
+    if (!list) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Playlist not found" });
     }
-    console.log("Found list: " + JSON.stringify(list));
-
-    // DOES THIS LIST BELONG TO THIS USER?
-    async function asyncFindUser(list) {
-      await User.findOne({ email: list.ownerEmail }, (err, user) => {
-        console.log("user._id: " + user._id);
-        console.log("req.userId: " + req.userId);
-
-        return res.status(200).json({
-          success: true,
-          playlist: list,
-          userName: user.userName,
-          avatar: user.avatar,
-        });
-      });
+    const user = await User.findOne({ email: list.ownerEmail });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Playlist owner not found" });
     }
-    asyncFindUser(list);
-  }).catch((err) => console.log(err));
+    return res.status(200).json({
+      success: true,
+      playlist: list,
+      userName: user.userName,
+      avatar: user.avatar,
+    });
+  } catch (err) {
+    console.error("getPlaylistById", err);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
 };
 
 copyPlaylist = async (req, res) => {
@@ -307,63 +294,44 @@ updatePlaylist = async (req, res) => {
     });
   }
   const body = req.body;
-  console.log("updatePlaylist: " + JSON.stringify(body));
-  console.log("req.body.name: " + req.body.name);
-
-  if (!body) {
+  if (!body || !body.playlist) {
     return res.status(400).json({
       success: false,
       error: "You must provide a body to update",
     });
   }
 
-  Playlist.findOne({ _id: req.params.id }, (err, playlist) => {
-    console.log("playlist found: " + JSON.stringify(playlist));
-    if (err) {
-      return res.status(404).json({
-        err,
-        message: "Playlist not found!",
-      });
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).json({ message: "Playlist not found!" });
     }
-
-    // DOES THIS LIST BELONG TO THIS USER?
-    async function asyncFindUser(list) {
-      await User.findOne({ email: list.ownerEmail }, (err, user) => {
-        console.log("user._id: " + user._id);
-        console.log("req.userId: " + req.userId);
-        if (user._id == req.userId) {
-          console.log("correct user!");
-          console.log("req.body.name: " + req.body.name);
-
-          list.name = body.playlist.name;
-          list.songs = body.playlist.songs;
-          list
-            .save()
-            .then(() => {
-              console.log("SUCCESS!!!");
-              return res.status(200).json({
-                success: true,
-                id: list._id,
-                message: "Playlist updated!",
-              });
-            })
-            .catch((error) => {
-              console.log("FAILURE: " + JSON.stringify(error));
-              return res.status(404).json({
-                error,
-                message: "Playlist not updated!",
-              });
-            });
-        } else {
-          console.log("incorrect user in line 300!");
-          return res
-            .status(400)
-            .json({ success: false, description: "authentication error" });
-        }
-      });
+    const user = await User.findOne({ email: playlist.ownerEmail });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, description: "Owner not found" });
     }
-    asyncFindUser(playlist);
-  });
+    if (String(user._id) !== String(req.userId)) {
+      return res
+        .status(400)
+        .json({ success: false, description: "authentication error" });
+    }
+    playlist.name = body.playlist.name;
+    playlist.songs = body.playlist.songs;
+    await playlist.save();
+    return res.status(200).json({
+      success: true,
+      id: playlist._id,
+      message: "Playlist updated!",
+    });
+  } catch (error) {
+    console.error("updatePlaylist", error);
+    return res.status(500).json({
+      success: false,
+      message: "Playlist not updated!",
+    });
+  }
 };
 module.exports = {
   createPlaylist,
