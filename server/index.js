@@ -11,10 +11,15 @@ const app = express()
 
 app.set('trust proxy', 1)
 
-const defaultOrigins = ['http://localhost:3000']
+function normalizeOrigin(url) {
+  if (!url) return ''
+  return url.trim().replace(/\/$/, '')
+}
+
+const defaultOrigins = ['http://localhost:3000'].map(normalizeOrigin)
 const extraOrigins = (process.env.CLIENT_ORIGINS || '')
   .split(',')
-  .map((s) => s.trim())
+  .map((s) => normalizeOrigin(s))
   .filter(Boolean)
 const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])]
 
@@ -22,16 +27,43 @@ const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])]
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) {
       callback(null, true)
-    } else {
-      callback(null, false)
+      return
     }
+    const requestOrigin = normalizeOrigin(origin)
+    if (allowedOrigins.includes(requestOrigin)) {
+      callback(null, true)
+      return
+    }
+    if (process.env.CORS_ALLOW_VERCEL === 'true') {
+      try {
+        const host = new URL(origin).hostname
+        if (host === 'vercel.app' || host.endsWith('.vercel.app')) {
+          callback(null, true)
+          return
+        }
+      } catch (e) {
+        /* ignore */
+      }
+    }
+    console.warn('CORS rejected origin (set CLIENT_ORIGINS on Render):', origin)
+    callback(null, false)
   },
-  credentials: true
+  credentials: true,
 }))
 app.use(express.json())
 app.use(cookieParser())
+
+// Browsers opening the API host directly hit GET / — there is no React app here
+app.get('/', (req, res) => {
+  res.json({
+    ok: true,
+    service: 'Playlister API',
+    hint: 'Open your deployed React app URL in the browser. This address is only for API requests.',
+  })
+})
+app.get('/favicon.ico', (req, res) => res.status(204).end())
 
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const authRouter = require('./routes/auth-router')
