@@ -21,10 +21,6 @@ const style1 = {
 
 export default function MUIRemoveSongModal() {
   const { store } = useContext(GlobalStoreContext);
-  let name = "";
-  if (store.listMarkedForDeletion) {
-    name = store.listMarkedForDeletion.name;
-  }
   function handleRemoveSong(event) {
     event.stopPropagation();
     store.removeSongFromCatalog();

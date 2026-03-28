@@ -18,14 +18,13 @@ function PlaylistCard(props) {
   const [text, setText] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { idNamePair } = props;
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadUser() {
       await auth.getLoggedIn();
-      setLoading(false);
     }
     loadUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh session once on mount
   }, []);
   if (auth.loading) {
     return null;
@@ -39,10 +38,6 @@ function PlaylistCard(props) {
     setIsExpanded(!isExpanded);
     store.setCurrentList(idNamePair._id);
   };
-  function handleToggleEdit(event) {
-    event.stopPropagation();
-    toggleEdit();
-  }
 
   function toggleEdit() {
     let newActive = !editActive;

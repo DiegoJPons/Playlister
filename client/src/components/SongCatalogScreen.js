@@ -39,7 +39,7 @@ const SongCatalogScreen = () => {
 
   useEffect(() => {
     store.loadSongCatalog();
-  }, []);
+  }, [store]);
 
   const sortOptions = [
     "Listens (Hi-Lo)",

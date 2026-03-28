@@ -25,6 +25,7 @@ function AuthContextProvider(props) {
 
   useEffect(() => {
     auth.getLoggedIn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, []);
 
   const authReducer = (action) => {

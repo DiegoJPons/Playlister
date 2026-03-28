@@ -39,7 +39,7 @@ const PlaylistsScreen = () => {
 
   useEffect(() => {
     store.loadIdNamePairs();
-  }, []);
+  }, [store]);
 
   const sortOptions = [
     "Listeners (Hi-Lo)",

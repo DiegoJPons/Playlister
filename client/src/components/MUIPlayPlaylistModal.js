@@ -61,6 +61,11 @@ export default function MUIPlayPlaylistModal(props) {
     }
   }, [store.listMarkedForPlay, currentSongId]);
 
+  const currentSong = store.listMarkedForPlay?.songs.find(
+    (song) => song._id === currentSongId
+  );
+  const youTubeIdToPlay = currentSong?.youTubeId || YOUTUBE_PLACEHOLDER_ID;
+
   const handleAutoplayNextSong = useCallback(
     (nextYouTubeId) => {
       const nextSong = store.listMarkedForPlay?.songs.find(
@@ -79,20 +84,15 @@ export default function MUIPlayPlaylistModal(props) {
       if (playerStatus === 1) {
         setIsPlaying(true);
 
-        if (currentSongId) {
+        if (currentSongId && currentSong) {
           store.incrementListensCount(currentSong.songId);
         }
       } else if (playerStatus === 2) {
         setIsPlaying(false);
       }
     },
-    [currentSongId, store]
+    [currentSongId, currentSong, store]
   );
-
-  const currentSong = store.listMarkedForPlay?.songs.find(
-    (song) => song._id === currentSongId
-  );
-  const youTubeIdToPlay = currentSong?.youTubeId || YOUTUBE_PLACEHOLDER_ID;
 
   function handleSongClick(songId) {
     setCurrentSongId(songId);
@@ -200,10 +200,8 @@ export default function MUIPlayPlaylistModal(props) {
             <Box
               sx={{
                 display: "flex",
-                alignItems: "center",
-                width: "100%",
-
                 alignItems: "flex-start",
+                width: "100%",
               }}
             >
               <Avatar
