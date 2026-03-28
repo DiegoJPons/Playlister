@@ -36,8 +36,4 @@ server/     REST API
 
 The API and client are separate packages; build the client for static hosting (e.g. **Vercel**) and run the API on a Node host (e.g. **Render**) with `DB_CONNECT` and CORS configured for your frontend origin.
 
----
 
-## Note
-
-This project is for learning and portfolio use and is not affiliated with YouTube or Spotify.
