@@ -11,22 +11,25 @@ import {
   EditAccountScreen,
   SongCatalogScreen,
 } from "./components";
+import BackendReadyGate from "./components/BackendReadyGate";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthContextProvider>
-        <GlobalStoreContextProvider>
-          <AppBanner />
-          <Switch>
-            <Route path="/" exact component={HomeWrapper} />
-            <Route path="/login/" exact component={LoginScreen} />
-            <Route path="/register/" exact component={CreateAccountScreen} />
-            <Route path="/edit-account/" exact component={EditAccountScreen} />
-            <Route path="/song-catalog/" exact component={SongCatalogScreen} />
-          </Switch>
-        </GlobalStoreContextProvider>
-      </AuthContextProvider>
+      <BackendReadyGate>
+        <AuthContextProvider>
+          <GlobalStoreContextProvider>
+            <AppBanner />
+            <Switch>
+              <Route path="/" exact component={HomeWrapper} />
+              <Route path="/login/" exact component={LoginScreen} />
+              <Route path="/register/" exact component={CreateAccountScreen} />
+              <Route path="/edit-account/" exact component={EditAccountScreen} />
+              <Route path="/song-catalog/" exact component={SongCatalogScreen} />
+            </Switch>
+          </GlobalStoreContextProvider>
+        </AuthContextProvider>
+      </BackendReadyGate>
     </BrowserRouter>
   );
 };
