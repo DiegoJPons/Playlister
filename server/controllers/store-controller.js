@@ -234,9 +234,7 @@ getPlaylistSearch = async (req, res) => {
     const playlists = await Playlist.find({});
 
     if (!playlists || playlists.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Playlists not found` });
+      return res.status(200).json({ success: true, data: [] });
     }
 
     let searchResults = playlists.filter((p) => {
@@ -284,7 +282,7 @@ getPlaylistSearch = async (req, res) => {
       return {
         _id: p._id,
         name: p.name,
-        ownerId: owner._id,
+        ownerId: owner ? owner._id : null,
         userName: p.userName,
         avatar: owner ? owner.avatar : null,
         listenersCount: p.listenersCount,

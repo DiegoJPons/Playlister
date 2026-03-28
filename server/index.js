@@ -104,8 +104,26 @@ const storeRouter = require('./routes/store-router')
 app.use('/store', storeRouter)
 
 // INITIALIZE OUR DATABASE OBJECT
+const mongoose = require('mongoose')
 const db = require('./db')
 db.on('error', console.error.bind(console, 'Database connection error:'))
+
+function scheduleFixtureSeed() {
+  const reset = process.env.SEED_DB_RESET_ON_START === 'true'
+  const onStart = process.env.SEED_DB_ON_START === 'true'
+  if (!reset && !onStart) return
+
+  const run = () => {
+    const { maybeSeedFromFixture } = require('./db/seedFromFixture')
+    maybeSeedFromFixture().catch((err) =>
+      console.error('Fixture seed failed:', err),
+    )
+  }
+  if (mongoose.connection.readyState === 1) run()
+  else mongoose.connection.once('open', run)
+}
+
+scheduleFixtureSeed()
 
 // PUT THE SERVER IN LISTENING MODE
 app.listen(PORT, () => console.log(`Playlister Server running on port ${PORT}`))

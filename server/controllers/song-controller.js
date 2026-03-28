@@ -171,9 +171,7 @@ getSongCatalogSearch = async (req, res) => {
     const songs = await Song.find({});
 
     if (!songs || songs.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Song catalog not found` });
+      return res.status(200).json({ success: true, data: [] });
     }
 
     let searchResults = songs.filter((song) => {
