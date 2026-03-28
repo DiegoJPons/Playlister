@@ -39,7 +39,8 @@ const PlaylistsScreen = () => {
 
   useEffect(() => {
     store.loadIdNamePairs();
-  }, [store]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount; `store` identity changes after every fetch and would loop
+  }, []);
 
   const sortOptions = [
     "Listeners (Hi-Lo)",

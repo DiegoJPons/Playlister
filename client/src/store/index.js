@@ -10,7 +10,6 @@ import DuplicateSong_Transaction from "../transactions/DuplicateSong_Transaction
 import AuthContext from "../auth";
 
 export const GlobalStoreContext = createContext({});
-console.log("create GlobalStoreContext");
 
 export const GlobalStoreActionType = {
   CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
@@ -71,11 +70,8 @@ function GlobalStoreContextProvider(props) {
   });
   const history = useHistory();
 
-  console.log("inside useGlobalStore");
-
   // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
   const { auth } = useContext(AuthContext);
-  console.log("auth: " + auth);
 
   // HERE'S THE DATA STORE'S REDUCER, IT MUST
   // HANDLE EVERY TYPE OF STATE CHANGE
@@ -718,7 +714,6 @@ function GlobalStoreContextProvider(props) {
       const response = await storeRequestSender.getPlaylistPairs();
       if (response.data.success) {
         let pairsArray = response.data.idNamePairs;
-        console.log(pairsArray);
         storeReducer({
           type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
           payload: pairsArray,
