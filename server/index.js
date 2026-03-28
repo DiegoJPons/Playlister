@@ -13,20 +13,46 @@ app.set('trust proxy', 1)
 
 function normalizeOrigin(url) {
   if (!url) return ''
-  return url.trim().replace(/\/$/, '')
+  let s = url.trim().replace(/\/$/, '')
+  if (
+    (s.startsWith('"') && s.endsWith('"')) ||
+    (s.startsWith("'") && s.endsWith("'"))
+  ) {
+    s = s.slice(1, -1).trim()
+  }
+  return s.replace(/\/$/, '')
 }
 
-const defaultOrigins = ['http://localhost:3000'].map(normalizeOrigin)
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+].map(normalizeOrigin)
 const extraOrigins = (process.env.CLIENT_ORIGINS || '')
   .split(',')
   .map((s) => normalizeOrigin(s))
   .filter(Boolean)
 const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])]
 
-// SETUP THE MIDDLEWARE
-app.use(express.urlencoded({ extended: true }))
-app.use(cors({
-  origin: (origin, callback) => {
+function isVercelPreviewOrigin(origin) {
+  try {
+    const host = new URL(origin).hostname.toLowerCase()
+    return host === 'vercel.app' || host.endsWith('.vercel.app')
+  } catch (e) {
+    return false
+  }
+}
+
+function isRenderStaticOrigin(origin) {
+  try {
+    const host = new URL(origin).hostname.toLowerCase()
+    return host.endsWith('.onrender.com')
+  } catch (e) {
+    return false
+  }
+}
+
+const corsOptions = {
+  origin(origin, callback) {
     if (!origin) {
       callback(null, true)
       return
@@ -36,22 +62,28 @@ app.use(cors({
       callback(null, true)
       return
     }
-    if (process.env.CORS_ALLOW_VERCEL === 'true') {
-      try {
-        const host = new URL(origin).hostname
-        if (host === 'vercel.app' || host.endsWith('.vercel.app')) {
-          callback(null, true)
-          return
-        }
-      } catch (e) {
-        /* ignore */
-      }
+    if (isVercelPreviewOrigin(origin)) {
+      callback(null, true)
+      return
     }
-    console.warn('CORS rejected origin (set CLIENT_ORIGINS on Render):', origin)
+    if (process.env.CORS_ALLOW_RENDER_STATIC === 'true' && isRenderStaticOrigin(origin)) {
+      callback(null, true)
+      return
+    }
+    console.warn('CORS rejected origin:', origin, '| configured:', allowedOrigins.join(' | ') || '(none)')
     callback(null, false)
   },
   credentials: true,
-}))
+}
+
+console.log(
+  'CORS: explicit CLIENT_ORIGINS →',
+  allowedOrigins.filter((o) => !defaultOrigins.includes(o)).join(', ') || '(none; Vercel *.vercel.app still allowed)',
+)
+
+// SETUP THE MIDDLEWARE
+app.use(express.urlencoded({ extended: true }))
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
